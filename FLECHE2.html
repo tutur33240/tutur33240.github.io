@@ -1,39 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
+
     <!-- LEAFLET CSS LINK -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png" />
-	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-	
-	<!-- BASEMAPS -->
-    <link rel="stylesheet" href="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png" />
-    <link rel="stylesheet" href="https://gpp3-wxs.ign.fr/{v3}/{key}/geoportail/wmts?LAYER={ign_layer}&EXCEPTIONS=text/xml&FORMAT={format}&SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&STYLE={style}&TILEMATRIXSET={ign_tile_matrix_set}&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}" />
 
-	<!-- CHART.JS LINK -->
+    <!-- LEAFLET JS LINK -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <!-- CHART.JS LINK -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-	
-    <title>GR 20</title> 
-    
+
+    <title>GR 20</title>
+
     <style>
         body {
             margin: 0;
             padding: 0;
         }
-		
+
         #map {
-            width: 100%;
-            height: 60vh;
-			border: 5px solid #006400;
+            width: 99.5%;
+            height: 99vh;
+            border: 5px solid #006400;
         }
-		
+
+        #map-title {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            font-weight: bold;
+            color: #0000a8;
+            z-index: 1000;
+        }
+
+       
+       
         .legend {
             padding: 10px;
             border: 4px solid #006400;
+            background-color: #ffffff; /* Fond blanc pour la légende */
         }
 
         .legend i {
@@ -43,161 +55,117 @@
             margin-right: 5px;
         }
 		
-		.legend .etape-line {
-			background-color: blue; 
+		.legend .ETAPE_GR20-line {
+			background-color: #0033bc;
 			height: 2px;
-			width: 20px; 
+			width: 20px;
 			display: inline-block;
 			margin-right: 5px;
-		}
-	
-		.legend .refuge i {
-			background-color: #FF0000; 
 		}
 
-		.legend .refuge-square {
-			background-color: red; 
-			width: 10px; 
-			height: 10px;
-			display: inline-block;
-			margin-right: 5px;
-		}
+        .legend .corridor-line {
+            background-color: #468146;
+            height: 2px;
+            width: 20px;
+            display: inline-block;
+            margin-right: 5px;
+        }
 		
+		/* Ajoutez cette partie dans votre balise style (style tag) existante */
+			.legend .parc-polygon {
+				background-color: rgba(0, 0, 255, 0.5); /* Couleur bleue avec une transparence de 50% */
+				height: 20px; /* Ajustez la hauteur selon vos besoins */
+				width: 20px; /* Ajustez la largeur selon vos besoins */
+				display: inline-block;
+				margin-right: 5px;
+			}
+
+        .legend .reservoir-legend {
+            background-color: #079c88;
+            height: 20px;
+            width: 20px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .legend .sites-legend {
+            background-color: #e1ce2f;
+            height: 20px;
+            width: 20px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+		
+    </style>
     </style>
 </head>
 
 <body>
+    <div id="map">
+        <div id="map-title">TRAME VERTE DU PARC NATIONAL ET NATUREL DE CORSE </div>
+    </div>
 
-
-    
-        <div id="map"></div>
-		
-
-
-        <!-- LEAFLET JS LINK -->
-        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-
-        <script>
-			
-		/////////////////////////////
-		//CREATION DE LA CARTE OSM///
-		/////////////////////////////
-		
-            var map = L.map("map").setView([42.11156209079745, 9.077056951496923], 9);
-            var osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            });
-			
-					
-									
-		////////////////////////////////////
-		//CREATION DE LA CARTE OSM RELIEF///
-		///////////////////////////////////
-		
-			// Fond de carte OSM Relief
-			var osmRelief = L.tileLayer("http://a.tile.opentopomap.org/{z}/{x}/{y}.png", {
+    <script>
+        var map = L.map("map").setView([42.11156209079745, 9.077056951496923], 9);
+        var osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         });
 
-///////////////////////////////////////////////////////////////////////////////////////		
-		
-		////////////////////////////////
-		//INTEGRATION DES COUCHES WMS///
-		////////////////////////////////
-		
-            var url_parc = 'http://localhost:8080/geoserver/postgrsql/wms';
+        // Fond de carte OSM Relief (utilisé pour la démo)
+        var osmRelief = L.tileLayer("http://a.tile.opentopomap.org/{z}/{x}/{y}.png", {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });
 
-            var parc = L.tileLayer.wms(url_parc, {
-                layers: 'PARC',
+        var url_parc = 'http://localhost:8080/geoserver/postgrsql/wms';
+        var parc = createWMSLayer('PARC', 0.5, '93D1F');
+
+        var url_CORRIDOR = 'http://localhost:8080/geoserver/postgrsql/wms';
+        var CORRIDOR = createWMSLayer('Corridor_Corsica', 0.7, '31B54B');
+
+        var url_RESERVOIR = 'http://localhost:8080/geoserver/postgrsql/wms';
+        var RESERVOIR = createWMSLayer('Réparée_dec', 0.7, '31B54B');
+
+        var url_SITES = 'http://localhost:8080/geoserver/postgrsql/wms';
+        var SITES = createWMSLayer('sites_inscrits', 0.7, '31B54B');
+
+        var url_ETAPE = 'http://localhost:8080/geoserver/postgrsql/wms';
+        var ETAPE_GR20 = L.tileLayer.wms(url_ETAPE, {
+            layers: 'ETAPE_GR20',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.7,
+            color: '31B54B',
+            borderColor: '31B54B'
+        });
+
+        function createWMSLayer(layerName, opacity, color) {
+            return L.tileLayer.wms('http://localhost:8080/geoserver/postgrsql/wms', {
+                layers: layerName,
                 format: 'image/png',
                 transparent: true,
                 attribution: "mylayer",
                 crs: L.CRS.EPSG2154,
-                opacity: 0.7,
-                color: '93D1F',
-                borderColor: '93D1F'
+                opacity: opacity,
+                color: color,
+                borderColor: color
             });
+        }
 
-            var url_ZNIEFFI = 'http://localhost:8080/geoserver/postgrsql/wms';
-
-            var ZNIEFFI = L.tileLayer.wms(url_ZNIEFFI, {
-                layers: 'ZNIEFFI',
-                format: 'image/png',
-                transparent: true,
-                attribution: "mylayer",
-                crs: L.CRS.EPSG2154,
-                opacity: 0.7,
-                color: '31B54B',
-                borderColor: '31B54B'
-            });
-
-            var url_ZNIEFFII = 'http://localhost:8080/geoserver/postgrsql/wms';
-
-            var ZNIEFFII = L.tileLayer.wms(url_ZNIEFFII, {
-                layers: 'ZNIEFFII',
-                format: 'image/png',
-                transparent: true,
-                attribution: "mylayer",
-                crs: L.CRS.EPSG2154,
-                opacity: 0.7,
-                color: '31B54B',
-                borderColor: '31B54B'
-            });
-
-			var url_refuge = 'http://localhost:8080/geoserver/postgrsql/wms';
-            var REFUGE = L.tileLayer.wms(url_refuge, {
-                layers: 'refuges',
-                format: 'image/png',
-                transparent: true,
-                attribution: "mylayer",
-                crs: L.CRS.EPSG2154,
-                opacity: 1,
-                color: '31B54B',
-                borderColor: '31B54B'
-				
-            });
-			
-            var url_ETAPE = 'http://localhost:8080/geoserver/postgrsql/wms';
-            var ETAPE = L.tileLayer.wms(url_ETAPE, {
-               layers: 'ETAPE_GR20',
-                format: 'image/png',
-                transparent: true,
-                attribution: "mylayer",
-               crs: L.CRS.EPSG2154,
-                opacity: 0.7,
-                color: '31B54B',
-                borderColor: '31B54B'
-            });
-			
-			
-///////////////////////////////////////////////////////////////////////////////////////
-
-		///////////////////////////////////////
-		//CREATION DE LA BASEMAPS + OVERLAYS///
-		///////////////////////////////////////
-		
-			// Ajout d'un groupe de couches pour basculer entre les couches de la carte
-			var baseLayers = {
+        var baseLayers = {
             "OpenStreetMap": osm,
             "OSM Relief": osmRelief
-			};
-			
-			// Ajout des couches WMS supplémentaires au groupe d'overlays
-			var overlays = {
+        };
+
+        var overlays = {
             "Parc": parc,
-            "ZNIEFFI": ZNIEFFI,
-            "ZNIEFFII": ZNIEFFII,
-            "Etape": ETAPE,
-            "Refuge": REFUGE
-			};
+            "Corridor écologique": CORRIDOR,
+            "ETAPE_GR20": ETAPE_GR20,
+            "RESERVOIR": RESERVOIR,
+            "SITES": SITES,
+        };
 
-///////////////////////////////////////////////////////////////////////////////////////
-
-		//////////////////////////////
-		//INTEGRATION DE LA LEGENDE///
-		//////////////////////////////
-		
-			// Ajout de la légende à la carte
         var legend = L.control({ position: 'bottomright' });
 
         legend.onAdd = function () {
@@ -205,211 +173,91 @@
             div.innerHTML = '<div id="legend-container"></div>';
             return div;
         };
-///////////////////////////////////////////////////////////////////////////////////////
 
-		/////////////////////////////////////
-		//AJOUT SUR LA CARTE DE LA LEGENDE///
-		/////////////////////////////////////
-		
         legend.addTo(map);
 
-///////////////////////////////////////////////////////////////////////////////////////
-		
-		///////////////////////////////////////////////////////////////////////////////////////////////
-		//FONCTION POUR VISUALISER LES COUCHES EN L2GENDE EN FONCTION SI ELLES SONT AFFICHEES OU PAS///
-		///////////////////////////////////////////////////////////////////////////////////////////////
-		
-			// Fonction pour mettre à jour la légende en fonction des couches WMS actives
-			function updateLegend() {
-				var activeLayers = [];
-				map.eachLayer(function (layer) {
-					if (layer instanceof L.TileLayer.WMS && map.hasLayer(layer)) {
-						activeLayers.push(layer.options.layers);
-					}
-				});
-
-				var legendContent = "<h4>Légende</h4>";
-				activeLayers.forEach(function (layer) {
-					switch (layer) {
-						case 'PARC':
-							legendContent += '<i style="background: #93D1F"></i><span>Parc</span>';
-							break;
-						case 'ZNIEFFI':
-							legendContent += '<i style="background: #31B54B"></i><span>ZNieff</span>';
-							break;
-						case 'ZNIEFFII':
-							legendContent += '<i style="background: #31B54B"></i><span>ZNieff</span>';
-							break;
-						case 'ETAPE_GR20':
-							legendContent += '<div class="legend-item etape"><div class="etape-line"></div><span>Étape</span></div>';
-							break;
-						case 'refuges':
-							legendContent += '<div class="legend-item refuge"><div class="refuge-square"></div><span>Refuge</span></div>';
-							break;
-						// Ajoutez des cas pour d'autres couches WMS au besoin
-					}
-				});
-
-				document.getElementById('legend-container').innerHTML = legendContent;
-			}
-
-			// Initialisez la carte lors du chargement de la page
-			document.addEventListener('DOMContentLoaded', function () {
-				// Mettez ici tout le code d'initialisation que vous aviez avant
-			});
-
-///////////////////////////////////////////////////////////////////////////////////////
-		
-		/////////////////////////////////////////////
-		//AFFICHE ET ENLEVE LES COUCHES EN LEGENDE///
-		/////////////////////////////////////////////
-		
-			// Ajoutez ces événements pour mettre à jour la légende lorsqu'une couche est ajoutée ou supprimée
-			map.on('layeradd', function (event) {
-				console.log('Layer added:', event.layer);
-				updateLegend();
-			});
-
-			map.on('layerremove', function (event) {
-				console.log('Layer removed:', event.layer);
-				updateLegend();
-			});
-			
-///////////////////////////////////////////////////////////////////////////////////////
-			
-		///////////////////////////////////////
-		//AFFICHAGE DES WIDGETS SUR LA CARTE///
-		///////////////////////////////////////
-			
-			// Ajout du contrôle des couches pour basculer entre les basemaps et les overlays
-			L.control.layers(baseLayers, overlays).addTo(map);
-				
-				 // Ajout du contrôle d'échelle en bas à gauche
-			L.control.scale().addTo(map);
-				
-			// Ajout des couches WMS + fond de carte de base sur la carte
-			osm.addTo(map);
-			parc.addTo(map);
-			ZNIEFFI.addTo(map);
-			ZNIEFFII.addTo(map);
-			ETAPE.addTo(map);
-			REFUGE.addTo(map);
-			
-///////////////////////////////////////////////////////////////////////////////////////
-
-			var url_refuge = 'http://localhost:8080/geoserver/postgrsql/wms';
-            var REFUGE = L.tileLayer.wms(url_refuge, {
-                layers: 'refuges',
-                format: 'image/png',
-                transparent: true,
-                attribution: "mylayer",
-                crs: L.CRS.EPSG2154,
-                opacity: 1,
-                color: '31B54B',
-                borderColor: '31B54B'
-				
+        function updateLegend() {
+            var activeLayers = [];
+            map.eachLayer(function (layer) {
+                if (layer instanceof L.TileLayer.WMS && map.hasLayer(layer)) {
+                    activeLayers.push(layer.options.layers);
+                }
             });
 
-		////////////////////////////////////////
-		//FONCTION BASCULE ENTRE LES BASEMAPS///
-		////////////////////////////////////////
-		
-			// Fonction pour basculer entre les basemaps
-			function switchBasemap(basemap) {
-				// Retirer toutes les couches de la carte
-				map.eachLayer(function (layer) {
-					map.removeLayer(layer);
-				});
+           var legendContent = "<h4>Légende</h4>";
+    activeLayers.forEach(function (layer) {
+        switch (layer) {
+           case 'ETAPE_GR20':
+    legendContent += '<i class="legend-icon ETAPE_GR20-line"></i><span>ETAPE_GR20</span>';
+    break;
+            case 'Corridor_Corsica':
+                legendContent += '<i class="legend-icon corridor-line"></i><span>Corridor écologique</span>';
+                break;
+            case 'Réparée_dec':
+                legendContent += '<i class="legend-icon reservoir-legend"></i><span>RESERVOIR</span>';
+                break;
+            case 'sites_inscrits':
+                legendContent += '<i class="legend-icon sites-legend"></i><span>SITES</span>';
+                break;
+            case 'ETAPE_GR20':
+                legendContent += '<i style="background: #31B54B"></i><span>ETAPE_GR20</span>';
+                break;
+			case 'PARC':
+				legendContent += '<i class="legend-icon parc-polygon"></i><span>Parc</span>';
+			break;
+                }
+            });
 
-				// Ajouter le basemap sélectionné à la carte
-				basemap.addTo(map);
+            document.getElementById('legend-container').innerHTML = legendContent;
+        }
 
-            // Ajouter les couches WMS sélectionnées à la carte
+        document.addEventListener('DOMContentLoaded', function () { });
+
+        map.on('layeradd', function (event) {
+            console.log('Layer added:', event.layer);
+            updateLegend();
+        });
+
+        map.on('layerremove', function (event) {
+            console.log('Layer removed:', event.layer);
+            updateLegend();
+        });
+
+        L.control.layers(baseLayers, overlays).addTo(map);
+
+        L.control.scale().addTo(map);
+
+        osm.addTo(map); // Fond de carte par défaut
+        parc.addTo(map);
+        CORRIDOR.addTo(map);
+        ETAPE_GR20.addTo(map);
+        RESERVOIR.addTo(map);
+        SITES.addTo(map);
+
+        function switchBasemap(basemap) {
+            map.eachLayer(function (layer) {
+                map.removeLayer(layer);
+            });
+
+            basemap.addTo(map);
+
             for (var key in overlays) {
                 overlays[key].addTo(map);
-				}
-			}
+            }
+        }
 
-///////////////////////////////////////////////////////////////////////////////////////
+        function switchToOSM() {
+            switchBasemap(osm);
+        }
 
-		///////////////////////////////////////////////////////////////////
-		//FONCTIONS POUR BASCULER VERS LE FOND DE CARTE OSM ET OSMRelief///
-		///////////////////////////////////////////////////////////////////
-		
-			// Fonction pour basculer vers le fond de carte OpenStreetMap
-			function switchToOSM() {
-				switchBasemap(osm);
-			}
-
-			// Fonction pour basculer vers le fond de carte OSM Relief
-			function switchToOSMRelief() {
-				switchBasemap(osmRelief);
-			}
-			
-	
-
-		
-
-//////////////////////////////////////////////////////////////////////////////////////////
-			
-		////////////////////////////////////////////////
-		//ZOOM SUR LA CARTE POUR VISUALISER LES ETAPE///
-		////////////////////////////////////////////////
-		
-					// Coordonnées des différentes étapes
-			function getStepCoordinates(stepId) {
-				// Code permettant de zoomer sur les coordonnées des différentes étapes du GR20
-				if (stepId === '1') {return [42.481086, 8.873310];} else if (stepId === '2') {return [42.442968, 8.914005];} else if (stepId === '3') {return [42.41260, 8.90814];} else if (stepId === '4') {return [42.38189, 8.93091];} else if (stepId === '5') {return [42.34288, 8.90041];} else if (stepId === '6') {return [42.31010, 8.87098];} else if (stepId === '7') {return [42.25408, 8.92726];} else if (stepId === '8') {return [42.207552, 9.014443]; } else if (stepId === '9') {return [42.168775, 9.054540];} else if (stepId === '10') {return [42.11135, 9.11264];} else if (stepId === '11') {return [42.03926, 9.14845];} else if (stepId === '12') {return [42.02101, 9.20988];} else if (stepId === '13') {return [41.97519, 9.22236];} else if (stepId === '14') {return [41.87967, 9.18133];} else if (stepId === '15') {return [41.79677, 9.20452];  } else if (stepId === '16') {return [41.76950, 9.29766];}
-			}
-			function zoomToRefuge(refugeId) {
-    // Récupérer les coordonnées du refuge
-    var refugeCoordinates = getRefugeCoordinates(refugeId);
-
-    if (refugeCoordinates) {
-        // Centrer la carte sur les coordonnées du refuge
-        map.setView(refugeCoordinates, 15);
-    }
-	
-	// Appeler la fonction pour afficher les informations et les images du refuge
-    displayRefugeInfo(selectedStep);
-}
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////////////////////
-
-		//////////////////////////////////////////////////
-		//ZOOM SUR LA CARTE POUR VISUALISER LES REFUGES///
-		//////////////////////////////////////////////////
-		
-// Coordonnées des différents refuges
-function getRefugeCoordinates(refugeId) {
-    // Ajoutez ici les coordonnées des différents refuges
-    if (refugeId === 'refuge1') {return [42.4651487, 8.9070050];} else if (refugeId === 'refuge2') {return [42.4260215, 8.9005223]; }else if (refugeId === 'refuge3') {return [42.4033778, 8.9223876]; }else if (refugeId === 'refuge4') {return [42.3622131, 8.9089915];}else if (refugeId === 'refuge5') {return [42.3349594, 8.8679375]; }else if (refugeId === 'refuge6') {return [42.2865467, 8.8935826]; }else if (refugeId === 'refuge7') {return [42.2198579, 8.9804574];}else if (refugeId === 'refuge8') {return [42.1980643, 9.0514710];}else if (refugeId === 'refuge9') {return [42.152373, 9.072672];}else if (refugeId === 'refuge10') {return [42.077803, 9.149744];}else if (refugeId === 'refuge11') {return [42.028019, 9.194159];}else if (refugeId === 'refuge12') {return [42.0085980, 9.2183175];}else if (refugeId === 'refuge13') {return [41.9351726, 9.2060378];}else if (refugeId === 'refuge14') {return [41.8414726, 9.2141023];}else if (refugeId === 'refuge15') {return [41.7941112, 9.2595784];}
-}
-	
-function hideForm() {
-	// Restaurer la taille normale de la carte
-	document.getElementById('map').style.width = '100%';
-	// Cacher le formulaire
-	document.getElementById('form-container').style.display = 'none';
-	// Cacher le bouton "Fermer le formulaire"
-	document.getElementById('close-btn').style.display = 'none';
-}
-
-			 // Données d'exemple du profil d'élévation
-var elevationData = [
-{ distance: 0, elevation: 280, name:'Calenzana'},{ distance: 10.5, elevation: 1520, name:'Ortu di u Piobbu' },{ distance: 17, elevation: 1270, name:'Carrozzu' },{ distance: 22.5, elevation: 1430, name:'Ascu Stagnu'  },{ distance: 30.5, elevation: 1683, name:'Tighjettu'  },{ distance: 37, elevation: 1991, name:'Ciottulu di i Mori' },{ distance: 48, elevation: 1470, name:'Castel De Vergio'  },{ distance: 60, elevation: 1601, name:'Manganu' },{ distance: 68, elevation: 1842, name:'Pietra Piana'  },{ distance: 78, elevation: 1430, name:'Onda' },{ distance: 86, elevation: 1586, name:'E Capannelle' },{ distance: 99, elevation: 1289, name:'San Petru di Verde'  },{ distance: 116.5, elevation: 1840, name:'Prati' },{ distance: 123.5, elevation: 1750, name:'Usciolu' },{ distance: 138, elevation: 1536, name:'Asinau' },{ distance: 150.2, elevation: 1054, name:'Paliri' },{ distance: 164.2, elevation: 280, name:'Conca' }];
-
-
-	
-	
-
-
-					
-		
-        </script>
-    </div>
+        function switchToOSMRelief() {
+            switchBasemap(osmRelief);
+        }
+    </script>
 </body>
-		   
+
 </html>
+
+
+	
 

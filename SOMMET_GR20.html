@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte des éventuels sommets à réaliser au cours de la traversée du GR20</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+
+        #map {
+            height: 100%;
+        }
+		
+		#map-title {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            font-weight: bold;
+            color: #0000a8;
+            z-index: 1000;
+        }
+		
+		 #coordinates {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #0000a8;
+            background-color: #ffffff;
+            padding: 5px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+<div id="map-title" style="background-color: #ffffff; padding: 10px;">LES SOMMETS INCONTOURNABLES A FAIRE DURANT QUELQUES ESCALES SUR LE GR20 </div>
+<div id="coordinates"></div>
+<div id="map">
+
+    </div>
+
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+<script>
+    // Création de la carte
+    var map = L.map('map').setView([42.2, 9.0], 9); // Coordonnées centrales de la Corse
+
+    // Ajout des tuiles ArcGIS Online à la carte
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: '© Esri',
+        maxZoom: 18,
+    }).addTo(map);
+
+    // Ajout de la couche WMS GeoServer à la carte
+    var url_ETAPE = 'http://localhost:8080/geoserver/postgrsql/wms';
+    var ETAPE_GR20 = L.tileLayer.wms(url_ETAPE, {
+        layers: 'ETAPE_GR20',
+        format: 'image/png',
+        transparent: true,
+        attribution: "mylayer",
+        crs: L.CRS.EPSG2154,
+        opacity: 0.5,
+        color: '31B54B',
+        borderColor: '31B54B'
+    }).addTo(map);
+
+    // Groupe de marqueurs avec regroupement
+    var markers = L.markerClusterGroup();
+
+    // Ajout des marqueurs au groupe
+var marker1 = L.marker([42.462289752147214, 8.918035537693063]).bindPopup("<b>Monte Corona</b><br>Altitude: 2144 m<br>");
+var marker2 = L.marker([42.426934918788255, 9.082156427362717]).bindPopup("<b>Aiguilles de Popolasca</b><br>Altitude: 1927 m<br>");
+var marker3 = L.marker([42.404768635286466, 8.989772795043068]).bindPopup("<b>Capu Biancu</b><br>Altitude: 2562 m<br>");
+var marker4 = L.marker([42.38124911384759, 8.945796787198844]).bindPopup("<b>Monte Cinto</b><br>Altitude: 2706m<br>");
+var marker5 = L.marker([42.37806121538992, 8.937411799534575]).bindPopup("<b>Pointe des Éboulis</b><br>Altitude: 2587 m<br>");
+var marker6 = L.marker([42.376531316785446, 8.908497882594787]).bindPopup("<b>Cascettoni</b><br>Altitude: 1906 m<br>");
+var marker7 = L.marker([42.34268331125719, 8.86647334101398]).bindPopup("<b>Capu Tafunatu</b><br>Altitude: 2335 m<br>");
+var marker8 = L.marker([42.212063408143464, 9.005717433792295]).bindPopup("<b>Punta Allé Porte</b><br>Altitude: 2313 m<br>");
+var marker9 = L.marker([42.46266971063071, 8.918445959196575]).bindPopup("<b>Punta Licciola</b><br>Altitude: 2235 m<br>");
+var marker10 = L.marker([42.21948407132503, 9.0588980475306]).bindPopup("<b>Monte Rotondo</b><br>Altitude: 2622 m<br>");
+var marker11 = L.marker([42.14009486444094, 9.099746921702796]).bindPopup("<b>Monte d'Oro</b><br>Altitude: 2389 m<br>");
+var marker12 = L.marker([42.09207034075559, 9.134429928075415]).bindPopup("<b>Punta dell'Oriente</b><br>Altitude: 2111 m<br>");
+var marker13 = L.marker([42.06232263743414, 9.13520066155036]).bindPopup("<b>Monte Corona</b><br>Altitude: 2144 m<br>");
+var marker14 = L.marker([42.46266971063071, 8.918445959196575]).bindPopup("<b>Monte Renoso</b><br>Altitude: 2352 m<br>");
+var marker15 = L.marker([42.05259440227992, 9.111307923827]).bindPopup("<b>Punta alla Vetta</b><br>Altitude: 2255 m<br>");
+var marker16 = L.marker([41.855875706062896, 9.227378329812073]).bindPopup("<b>Punta Di Tintennaja</b><br>Altitude: 1992 m<br>");
+var marker17 = L.marker([41.99654357784021, 9.217170646658527]).bindPopup("<b>Punta della Cappella</b><br>Altitude: 2041 m<br>");
+var marker18 = L.marker([41.8529833050582, 9.212097163024666]).bindPopup("<b>la Punta Scarachiana</b><br>Altitude: 2126 m<br>");
+var marker19 = L.marker([41.84948263196854, 9.207498585731965]).bindPopup("<b>le Monte Incudine</b><br>Altitude: 2136 m<br>");
+var marker20 = L.marker([42.03763810201276, 9.125367603824056]).bindPopup("<b>Punta Scaldasole</b><br>Altitude: 2100 m<br>");
+var marker21 = L.marker([42.090569112542696, 9.13448714993672]).bindPopup("<b>Punta dell'Oriente</b><br>Altitude: 2111 m<br>");
+var marker22 = L.marker([42.041689058494875, 9.104111926612436]).bindPopup("<b>Monte Niello</b><br>Altitude: 2157 m<br>");
+var marker23 = L.marker([42.052035509387956, 9.11234191085118]).bindPopup("<b>Punta alla Vetta</b><br>Altitude: 2255 m<br>");
+var marker24 = L.marker([42.04877563108026, 9.142192474368112]).bindPopup("<b>Monte Torto</b><br>Altitude: 1308 m<br>");
+var marker25 = L.marker([42.06006246084741, 9.133780588201711]).bindPopup("<b>Monte Renoso</b><br>Altitude: 2352 m<br>");
+var marker26 = L.marker([42.23808284745479, 8.939519547219943]).bindPopup("<b>Cimatella</b><br>Altitude: 2100 m<br>");
+var marker27 = L.marker([42.13551620345134, 9.071301149018051]).bindPopup("<b>Pointe Migliarello</b><br>Altitude: 1163 m<br>");
+var marker28 = L.marker([42.209268207964335, 9.00623091269547]).bindPopup("<b>Punta Allé Porte</b><br>Altitude: 2313 m<br>");
+var marker29 = L.marker([42.264987194923265, 8.97044059061768]).bindPopup("<b>Punta Artica</b><br>Altitude: 2327 m<br>");
+var marker30 = L.marker([42.2090348116877, 9.038110622036289]).bindPopup("<b>Bocca Muzzella</b><br>Altitude: 2206 m<br>");
+var marker31 = L.marker([42.230870639126664, 9.119824267758629]).bindPopup("<b>Monte Cardo</b><br>Altitude: 2453 m<br>");
+var marker32 = L.marker([42.21041710947858, 9.046606590285652]).bindPopup("<b>A Maniccia</b><br>Altitude: 2496 m<br>");
+var marker33 = L.marker([42.21714337588393, 9.053511944839725]).bindPopup("<b>Punta Mufrena</b><br>Altitude: 2560 m<br>");
+var marker34 = L.marker([42.393276576820604, 8.978464946910782]).bindPopup("<b>Capu à U Verdatu</b><br>Altitude: 2583 m<br>");
+var marker35 = L.marker([42.375418363161494, 8.914198930851423]).bindPopup("<b>Punta Minuta</b><br>Altitude: 2556 m<br>");
+var marker36 = L.marker([42.36915875923025, 8.929692253541438]).bindPopup("<b>le Capu Falu </b><br>Altitude: 2000 m<br>");
+var marker37 = L.marker([42.34345474268512, 8.878479930474239]).bindPopup("<b>Paglia Orba</b><br>Altitude: 2525 m<br>");
+var marker38 = L.marker([42.37398073964392, 8.923834592217982]).bindPopup("<b>Capu Larghia</b><br>Altitude: 2503 m<br>");
+var marker39 = L.marker([42.466507633304985, 8.987948731936354]).bindPopup("<b>Monte Padro</b><br>Altitude: 2389 m<br>");
+var marker40 = L.marker([42.42116882601727, 9.080198270017751]).bindPopup("<b>Cima à I Mori</b><br>Altitude: 2180 m<br>");
+var marker41 = L.marker([42.410386004653134, 8.911515592652567]).bindPopup("<b>A Muvrella</b><br>Altitude: 2148 m<br>");
+var marker42 = L.marker([42.47330771939438, 8.916179932017092]).bindPopup("<b>Capu a u Dente</b><br>Altitude: 2029 m<br>");
+
+
+
+markers.addLayer(marker1);
+markers.addLayer(marker2);
+markers.addLayer(marker3);
+markers.addLayer(marker4);
+markers.addLayer(marker5);
+markers.addLayer(marker6);
+markers.addLayer(marker7);
+markers.addLayer(marker8);
+markers.addLayer(marker9);
+markers.addLayer(marker10);
+markers.addLayer(marker11);
+markers.addLayer(marker12);
+markers.addLayer(marker13);
+markers.addLayer(marker14);
+markers.addLayer(marker15);
+markers.addLayer(marker16);
+markers.addLayer(marker17);
+markers.addLayer(marker18);
+markers.addLayer(marker19);
+markers.addLayer(marker20);
+markers.addLayer(marker21);
+markers.addLayer(marker22);
+markers.addLayer(marker23);
+markers.addLayer(marker24);
+markers.addLayer(marker25);
+markers.addLayer(marker26);
+markers.addLayer(marker27);
+markers.addLayer(marker28);
+markers.addLayer(marker29);
+markers.addLayer(marker30);
+markers.addLayer(marker31);
+markers.addLayer(marker32);
+markers.addLayer(marker33);
+markers.addLayer(marker34);
+markers.addLayer(marker35);
+markers.addLayer(marker36);
+markers.addLayer(marker37);
+markers.addLayer(marker38);
+markers.addLayer(marker39);
+markers.addLayer(marker40);
+markers.addLayer(marker41);
+markers.addLayer(marker42);
+
+
+    // Ajout du groupe de marqueurs à la carte
+    map.addLayer(markers);
+
+  // Ajout du suivi de la souris
+   
+    var coordinates = document.getElementById('coordinates');
+    map.on('mousemove', function (e) {
+        coordinates.innerHTML = 'Latitude: ' + e.latlng.lat.toFixed(6) + ' | Longitude: ' + e.latlng.lng.toFixed(6);
+    });
+	
+</script>
+
+</body>
+</html>

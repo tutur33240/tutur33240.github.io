@@ -276,6 +276,7 @@
 			<option value="Ravin">Ravins</option>
 			<option value="Riviere">Rivières</option>
 			<option value="Torrent">Torrents</option>
+			
        </select>
   
 			<label for="etape_gr20">Sentier du GR20:</label>
@@ -290,11 +291,56 @@
     </div>
 
     <script>
-   var map = L.map("map").setView([42.11156209079745, 9.077056951496923], 9);
+    var map = L.map("map").setView([42.11156209079745, 9.077056951496923], 9);
 
     var osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
+	
+	// Création des icônes personnalisées avec des images
+	var icon1 = L.icon({
+		iconUrl: 'lien_vers_image_1.png',
+		iconSize: [32, 32],
+		iconAnchor: [16, 32],
+		popupAnchor: [0, -32]
+	});
+
+	var icon2 = L.icon({
+		iconUrl: 'lien_vers_image_2.png',
+		iconSize: [32, 32],
+		iconAnchor: [16, 32],
+		popupAnchor: [0, -32]
+	});
+
+	var icon3 = L.icon({
+		iconUrl: 'lien_vers_image_3.png',
+		iconSize: [32, 32],
+		iconAnchor: [16, 32],
+		popupAnchor: [0, -32]
+	});
+
+	var icon4 = L.icon({
+		iconUrl: 'lien_vers_image_4.png',
+		iconSize: [32, 32],
+		iconAnchor: [16, 32],
+		popupAnchor: [0, -32]
+	});
+
+	// Création et ajout des marqueurs personnalisés
+
+	// Ajout des marqueurs avec des popups contenant des images
+	var marker1 = L.marker([42.21251462161299, 9.0121445021261]).addTo(map)
+		.bindPopup('<h3>Le lac de Mélo</h3><h4>Alt. 1710m</h4><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Corse_GR20_-_Lac_de_Melo.jpg/800px-Corse_GR20_-_Lac_de_Melo.jpg" alt="Lac de Mélo" style="width:100%;height:auto;">');
+
+	var marker2 = L.marker([42.21315033014233, 9.022808964719303]).addTo(map)
+		.bindPopup('<h3>Le Lac de Capitello</h3><h4>Alt. 1930m</h4><img src="https://res.cloudinary.com/easymountain/image/upload/f_webp,q_100,w_1100/v1690203670/do-web/prod/lac_melo_capitello_corse_4819615344.jpg" alt="Lac de Capitello" style="width:100%;height:auto;">');
+
+	var marker3 = L.marker([42.25686011247629, 8.938302110477084]).addTo(map)
+		.bindPopup('<h3>Le Lac de Nino</h3><h4>Alt. 1743m</h4><img src="https://gr20-infos.com/wp-content/uploads/2018/11/lac-glaciaire-1024x538.jpg" alt="Lac de Nino" style="width:100%;height:auto;">');
+
+	var marker4 = L.marker([42.11710415751318, 9.110091872709896]).addTo(map)
+		.bindPopup('<h3>Les cascades des Anglais</h3><h4>Alt. 1092m</h4><img src="https://gr20-infos.com/wp-content/uploads/2018/11/ajaccio.jpg" alt="Cascades des Anglais" style="width:100%;height:auto;">');
+
 
     var osmRelief = L.tileLayer("http://a.tile.opentopomap.org/{z}/{x}/{y}.png", {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

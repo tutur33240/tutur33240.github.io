@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- LEAFLET CSS LINK -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+    <!-- LEAFLET JS LINK -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <!-- CHART.JS LINK -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <title>GR 20</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+       
+	#map-title {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            font-weight: bold;
+			background-color: #ffffff;
+            color: #0000a8;
+            z-index: 1000;
+        }
+		#map-container {
+            flex: 1;
+        }
+        #map {
+            width: 100%;
+            height: 98vh;
+            border: 5px solid #006400;
+        }
+		
+	
+
+        #form-container {
+            width: 300px;
+            padding: 10px;
+            box-sizing: border-box;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-right: none;
+        }
+
+       
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        select {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+		
+		 .legend {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            padding: 10px;
+            border: 4px solid #006400;
+            background-color: #ffffff;
+        }
+
+        .legend i {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .legend .SENTIER-line {
+            background-color: #df0404;
+            height: 2px;
+            width: 20px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .legend .CORRIDOR-line {
+            background-color: #468146;
+            height: 2px;
+            width: 20px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+		
+		.legend .COURS_EAU-line {
+            background-color: #0132fb;
+            height: 2px;
+            width: 20px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .legend .RESERVOIR-legend {
+            background-color: #079c88;
+            height: 20px;
+            width: 20px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .legend .SITES-legend {
+            background-color: #e1ce2f;
+            height: 20px;
+            width: 20px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .legend .ZNIEFF1-legend {
+            background-color: #004d00;
+            height: 20px;
+            width: 20px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .legend .ZNIEFF2-legend {
+            background-color: #8cff66;
+            height: 20px;
+            width: 20px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+		
+		.legend .PARC-legend {
+            background-color: #98acff;
+            height: 20px;
+            width: 20px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+		
+		.legend .SURFACE_EAU-legend {
+            background-color: #0132fb;
+            height: 20px;
+            width: 20px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+		
+		
+    </style>
+</head>
+
+<body>
+    <div id="map-container">
+        <div id="map-title">TRAME VERTE ET BLEUE DU PARC NATUREL REGIONAL DE CORSE</div>
+        <div id="map"></div>
+        
+        <div class="legend">
+			<i class="legend-icon PARC-legend"></i><span>Parc Naturel Regional de Corse</span><br>
+            <i class="legend-icon SENTIER-line"></i><span>Sentier du GR20</span><br>
+            <i class="legend-icon CORRIDOR-line"></i><span>Corridors écologiques</span><br>
+            <i class="legend-icon RESERVOIR-legend"></i><span>Réservoirs de biodiversité</span><br>
+            <i class="legend-icon SITES-legend"></i><span>Sites Inscrits</span><br>
+            <i class="legend-icon ZNIEFF1-legend"></i><span>ZNIEFF 1</span><br>
+            <i class="legend-icon ZNIEFF2-legend"></i><span>ZNIEFF 2</span><br>
+			<i class="legend-icon COURS_EAU-line"></i><span>Cours d'eau</span><br>
+			<i class="legend-icon SURFACE_EAU-legend"></i><span>Surfaces d'eau</span><br>
+        </div>
+    </div>
+
+    <div id="form-container">
+    <div id="form-title"><u><strong>Préservation de la nature et à la biodiversité</strong></u></div>
+
+    <br/><br/>
+
+	 <div id="sous-titre"><u>Trame verte</u></div>
+
+        <label for="SOUSTRAME">Réservoirs de biodiversité:</label>
+        <select id="SOUSTRAME" onchange="updateLayer('SOUSTRAME')">
+			<option value="none">Aucun</option>
+            <option value="all">Tous</option>
+            <option value="Basse altitude">Basse altitude</option>
+            <option value="Haute montagne">Haute montagne</option>
+            <option value="Piemont et vallée">Piemont et vallée</option>
+            <option value="Moenne montagne">Moyenne montagne</option>
+        </select>
+
+        <label for="imm_lib">Sites inscrits:</label>
+        <select id="imm_lib" onchange="updateLayer('imm_lib')">
+			<option value="none">Aucun</option>
+            <option value="all">Tous</option>
+            <option value="Col et Aiguille de Bavella">Col et Aiguille de Bavella</option>
+            <option value="Massif du Mont Cinto (Versant sud-est)">Massif du Mont Cinto</option>
+            <option value="Forêt de Carozzica et Haute vallée de l'Asco">Forêt de Carozzica et Haute vallée de l'Asco</option>
+        </select>
+		
+		 <label for="niveau"> Corridor écologique:</label>
+        <select id="niveau" onchange="updateLayer('niveau')">
+			<option value="none">Aucun</option>
+            <option value="all">Tous</option>
+            <option value="Basse altitude">Basse altitude</option>
+            <option value="Continuité aquatique">Continuité aquatique</option>
+            <option value="Haute montagne">Haute montagne</option>
+			<option value="Moyenne montagne">Moyenne montagne</option>
+            <option value="Piemonts et Vallées">Piemonts et Vallées</option>
+       </select>
+	   
+	 <div id="sous-titre"><u>Zone Naturelle d'Intérêt Écologique, Faunistique et Floristique </u></div>
+			
+		<label for="nom"> Nom des zones ZNIEFF 1 :</label>
+        <select id="nom" onchange="updateLayer('nom')">
+			<option value="none">Aucun</option>
+            <option value="all">Tous</option>
+            <option value="LANDES ET PELOUSES D'ALTITUDE DU PLATEAU DU COSCIONE">LANDES ET PELOUSES D'ALTITUDE DU PLATEAU DU COSCIONE</option>
+            <option value="FORET DE LA FRATTE">FORET DE LA FRATTE</option>
+            <option value="PELOUSES SOMMITALES DU MONTE CINTO">PELOUSES SOMMITALES DU MONTE CINTO</option>
+			<option value="HETRAIE DU COL DE VIZZAVONA">HETRAIE DU COL DE VIZZAVONA</option>
+            <option value="HETRAIE DE CAMPOTILE">HETRAIE DE CAMPOTILE</option>
+            <option value="SOMMETS DU MONTE D'ORO ET DE LA PUNTA MIGLIARELLO">SOMMETS DU MONTE D'ORO ET DE LA PUNTA MIGLIARELLO</option>
+            <option value="CIRQUES ET LACS GLACIAIRES DU MONTE ROTONDO">CIRQUES ET LACS GLACIAIRES DU MONTE ROTONDO</option>
+			<option value="PELOUSES SOMMITALES DE L'INCUDINE">PELOUSES SOMMITALES DE L'INCUDINE</option>
+            <option value="CIRQUES ET LACS GLACIAIRES DU MONTE RENOSO">CIRQUES ET LACS GLACIAIRES DU MONTE RENOSO</option>
+            <option value="FORET DE MARMANO">FORET DE MARMANO</option>
+            <option value="FORET DE BAVELLA">FORET DE BAVELLA</option>
+			<option value="CUVETTE LACUSTRE ET POZZINE DU NINO">CUVETTE LACUSTRE ET POZZINE DU NINO</option>
+            <option value="FORETS DE LIBIU, GUAGNU ET PASTRICCIOLA ET MILIEUX RUPESTRES DE GUAGNU">FORETS DE LIBIU, GUAGNU ET PASTRICCIOLA ET MILIEUX RUPESTRES DE GUAGNU</option>
+       </select>
+	   
+	   <label for="arthur"> Nom des zones ZNIEFF 2 :</label>
+        <select id="arthur" onchange="updateLayer('arthur')">
+			<option value="none">Aucun</option>
+            <option value="all">Tous</option>
+            <option value="CRETES ET HAUTS VERSANTS DU MASSIF DE BAVELLA">CRETES ET HAUTS VERSANTS DU MASSIF DE BAVELLA</option>
+            <option value="FORET D'ALTITUDE DE VALDONIELLO">FORET D'ALTITUDE DE VALDONIELLO</option>
+            <option value="FORET D'ALTITUDE DE CAROZZICA">FORET D'ALTITUDE DE CAROZZICA</option>
+			<option value="CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MASSIF DE L'INCUDINE">CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MASSIF DE L'INCUDINE</option>
+            <option value="CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MONTE CINTO">CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MONTE CINTO</option>
+            <option value="FORETS DU FIUMORBU">FORETS DU FIUMORBU</option>
+            <option value="CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MONTE ROTONDO">CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MONTE ROTONDO</option>
+			<option value="CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MONTE RENOSO">CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MONTE RENOSO</option>
+            <option value="FORETS D'ALTITUDE DU HAUT TARAVO">FORETS D'ALTITUDE DU HAUT TARAVO</option>
+            <option value="SAPINIERE DU HAUT RAVIN DE MARMANO">SAPINIERE DU HAUT RAVIN DE MARMANO</option>  
+       </select>
+	  
+		<div id="sous-titre"><u>Surfaces d'eau </u></div>
+		
+		<label for="nature"> Surfaces hydrographique :</label>
+        <select id="nature" onchange="updateLayer('nature')">
+			<option value="none">Aucun</option>
+            <option value="all">Tous</option>
+            <option value="Retenue">Retenue</option>
+            <option value="Ecoulement naturel">Ecoulement naturel</option>
+            <option value="Mare">Mare</option>
+			<option value="Lac">Lac</option>Réservoir-bassin
+			<option value="Réservoir-bassin">Réservoir-bassin</option>
+       </select>
+	   
+	   <label for="types"> Réseau hydrographique :</label>
+        <select id="types" onchange="updateLayer('types')">
+			<option value="none">Aucun</option>
+            <option value="all">Tous</option>
+            <option value="Ruisseau">Ruisseaux</option>
+            <option value="Gorge">Gorges</option>
+            <option value="Fleuve">Fleuves</option>
+			<option value="Ravin">Ravins</option>
+			<option value="Riviere">Rivières</option>
+			<option value="Torrent">Torrents</option>
+       </select>
+  
+			<label for="etape_gr20">Sentier du GR20:</label>
+			<input type="checkbox" id="etape_gr20" onclick="toggleLayerVisibility('ETAPE_GR20')" checked>
+
+			<label for="PARC">Parc Naturel Régional de Corse :</label>
+			<input type="checkbox" id="PARC" onclick="toggleLayerVisibility('parc_corse')" checked>
+
+	   <br/><br/>
+
+	    <div id="sous-titre"><u>Légende :</u></div>
+    </div>
+
+    <script>
+   var map = L.map("map").setView([42.11156209079745, 9.077056951496923], 9);
+
+    var osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    var osmRelief = L.tileLayer("http://a.tile.opentopomap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });
+
+      var url_ETAPE = 'http://localhost:8080/geoserver/postgrsql/wms';
+      var ETAPE_GR20 = L.tileLayer.wms(url_ETAPE, {
+            layers: 'ETAPE_GR20',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.5,
+            color: '31B54B',
+            borderColor: '31B54B'
+        }).addTo(map);
+		
+	  var url_PARC = 'http://localhost:8080/geoserver/postgrsql/wms';
+      var PARC = L.tileLayer.wms(url_PARC, {
+            layers: 'parc_corse',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.1,
+            color: '31B54B',
+            borderColor: '31B54B'
+        }).addTo(map);
+		
+	 // var url_COURS_EAU = 'http://localhost:8080/geoserver/postgrsql/wms';
+      //var COURS_EAU = L.tileLayer.wms(url_COURS_EAU, {
+         //   layers: 'cours_hydro_fusion_dec ',
+          //  format: 'image/png',
+          //  transparent: true,
+          //  attribution: "mylayer",
+         //   crs: L.CRS.EPSG2154,
+         //   opacity: 0.7,
+       // }).addTo(map);
+		
+	  var url_SURFACE_EAU = 'http://localhost:8080/geoserver/postgrsql/wms';
+      var SURFACE_EAUAll = L.tileLayer.wms(url_SURFACE_EAU, {
+            layers: 'surface_hydro_dec ',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.7,
+        });
+		
+		var SURFACE_EAUFiltered = L.tileLayer.wms(url_SURFACE_EAU, {
+            layers: 'surface_hydro_dec ',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.7,
+        });
+	
+	// Initialiser la couche CORRIDOR avec un filtre vide
+   SURFACE_EAUFiltered.setParams({ CQL_FILTER: 'nature=\'\'' });
+   
+   var url_RESEAU_EAU = 'http://localhost:8080/geoserver/postgrsql/wms';
+      var RESEAU_EAUAll = L.tileLayer.wms(url_RESEAU_EAU, {
+            layers: 'cours_hydro_fusion_dec_',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.7,
+        });
+			
+		var RESEAU_EAUFiltered = L.tileLayer.wms(url_RESEAU_EAU, {
+            layers: 'cours_hydro_fusion_dec_',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.7,
+        });
+	
+	// Initialiser la couche CORRIDOR avec un filtre vide
+   RESEAU_EAUFiltered.setParams({ CQL_FILTER: 'types=\'\'' });
+	
+	 var url_corridor = 'http://localhost:8080/geoserver/postgrsql/wms';
+     var CORRIDORAll = L.tileLayer.wms(url_corridor, {
+            layers: 'Corridor_Corsica',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.5,     
+        });
+		
+	var url_CORRIDOR = 'http://localhost:8080/geoserver/postgrsql/wms';
+    var CORRIDORFiltered = L.tileLayer.wms(url_CORRIDOR, {
+			layers: 'Corridor_Corsica',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.5,    
+        });
+		
+	// Initialiser la couche CORRIDOR avec un filtre vide
+    CORRIDORFiltered.setParams({ CQL_FILTER: 'niveau=\'\'' });
+
+    var url_RESERVOIR = 'http://localhost:8080/geoserver/postgrsql/wms';
+    var RESERVOIRAll = L.tileLayer.wms(url_RESERVOIR, {
+        layers: 'far',
+        format: 'image/png',
+        transparent: true,
+        attribution: "mylayer",
+        crs: L.CRS.EPSG2154,
+        opacity: 0.5,
+    });
+
+    var RESERVOIRFiltered = L.tileLayer.wms(url_RESERVOIR, {
+        layers: 'far',
+        format: 'image/png',
+        transparent: true,
+        attribution: "mylayer",
+        crs: L.CRS.EPSG2154,
+        opacity: 0.5,
+    });
+	
+	// Initialiser la couche CORRIDOR avec un filtre vide
+    RESERVOIRFiltered.setParams({ CQL_FILTER: 'SOUSTRAME=\'\'' });
+
+    var url_SITES = 'http://localhost:8080/geoserver/postgrsql/wms';
+    var sites_inscritsAll = L.tileLayer.wms(url_SITES, {
+        layers: 'sites_inscrits',
+        format: 'image/png',
+        transparent: true,
+        attribution: "mylayer",
+        crs: L.CRS.EPSG2154,
+        opacity: 0.5,
+    });
+
+    var sites_inscritsFiltered = L.tileLayer.wms(url_SITES, {
+        layers: 'sites_inscrits',
+        format: 'image/png',
+        transparent: true,
+        attribution: "mylayer",
+        crs: L.CRS.EPSG2154,
+        opacity: 0.5,
+    });
+	
+	// Initialiser la couche CORRIDOR avec un filtre vide
+    sites_inscritsFiltered.setParams({ CQL_FILTER: 'imm_lib=\'\'' });
+
+    var url_znieff1 = 'http://localhost:8080/geoserver/postgrsql/wms';
+    var znieff1All = L.tileLayer.wms(url_znieff1, {
+        layers: 'TEST',
+        format: 'image/png',
+        transparent: true,
+        attribution: "mylayer",
+        crs: L.CRS.EPSG2154,
+        opacity: 0.5,
+    });
+
+    var znieff1Filtered = L.tileLayer.wms(url_znieff1, {
+        layers: 'TEST',
+        format: 'image/png',
+        transparent: true,
+        attribution: "mylayer",
+        crs: L.CRS.EPSG2154,
+        opacity: 0.5,
+    });
+	
+	// Initialiser la couche CORRIDOR avec un filtre vide
+    znieff1Filtered.setParams({ CQL_FILTER: 'nom=\'\'' });
+
+    var url_znieff2 = 'http://localhost:8080/geoserver/postgrsql/wms';
+    var znieff2All = L.tileLayer.wms(url_znieff2, {
+        layers: 'test6',
+        format: 'image/png',
+        transparent: true,
+        attribution: "mylayer",
+        crs: L.CRS.EPSG2154,
+        opacity: 0.5,
+    });
+
+    var znieff2Filtered = L.tileLayer.wms(url_znieff2, {
+        layers: 'test6',
+        format: 'image/png',
+        transparent: true,
+        attribution: "mylayer",
+        crs: L.CRS.EPSG2154,
+        opacity: 0.5,
+    });
+	
+	// Initialiser la couche CORRIDOR avec un filtre vide
+    znieff2Filtered.setParams({ CQL_FILTER: 'arthur=\'\'' });
+
+    // Ajout de la couche RESERVOIRFiltered à la carte au chargement
+	map.addLayer(RESEAU_EAUFiltered);
+	map.addLayer(SURFACE_EAUFiltered);
+	map.addLayer(CORRIDORFiltered);
+    map.addLayer(znieff1Filtered);
+    map.addLayer(znieff2Filtered);
+    map.addLayer(RESERVOIRFiltered);
+    map.addLayer(sites_inscritsFiltered);
+	
+	
+	// Utilisez bringToFront() pour déplacer les couches vers l'avant
+	RESEAU_EAUFiltered.bringToFront();
+	SURFACE_EAUFiltered.bringToFront();
+	CORRIDORFiltered.bringToFront();
+	znieff1Filtered.bringToFront();
+	znieff2Filtered.bringToFront();
+	RESERVOIRFiltered.bringToFront();
+	sites_inscritsFiltered.bringToFront();
+	ETAPE_GR20.bringToFront();
+
+    function updateLayer(layerType) {
+        var selectedType = document.getElementById(layerType).value;
+        var layerFiltered, layerAll;
+
+        switch (layerType) {
+            case 'SOUSTRAME':
+                layerFiltered = RESERVOIRFiltered;
+                layerAll = RESERVOIRAll;
+                break;
+            case 'imm_lib':
+                layerFiltered = sites_inscritsFiltered;
+                layerAll = sites_inscritsAll;
+                break;
+            case 'nom':
+                layerFiltered = znieff1Filtered;
+                layerAll = znieff1All;
+                break;
+            case 'arthur':
+                layerFiltered = znieff2Filtered;
+                layerAll = znieff2All;
+                break;
+			case 'niveau':
+                layerFiltered = CORRIDORFiltered;
+                layerAll = CORRIDORAll;
+                break;
+			case 'nature':
+                layerFiltered = SURFACE_EAUFiltered;
+                layerAll = SURFACE_EAUAll;
+                break;
+			case 'types':
+                layerFiltered = RESEAU_EAUFiltered;
+                layerAll = RESEAU_EAUAll;
+                break;
+            default:
+                return;
+        }
+
+        if (selectedType === "none") {
+            // ne rien afficher
+            map.removeLayer(layerAll);
+            map.removeLayer(layerFiltered);
+        } else if (selectedType === "all") {
+            // afficher la couche sans aucun filtre
+            map.removeLayer(layerFiltered);
+            map.addLayer(layerAll);
+        } else {
+            // afficher la couche avec filtre
+            map.removeLayer(layerAll);
+            map.addLayer(layerFiltered);
+            layerFiltered.setParams({ CQL_FILTER: layerType + '=\'' + selectedType + '\'' });
+        }
+    }
+	
+	 function toggleLayerVisibility(layerName) {
+    var layer = window[layerName];
+
+    if (document.getElementById('etape_gr20').checked) {
+        map.addLayer(ETAPE_GR20);
+    } else {
+        map.removeLayer(ETAPE_GR20);
+    }
+
+    if (document.getElementById('PARC').checked) {
+        map.addLayer(PARC);
+    } else {
+        map.removeLayer(PARC);
+    }
+	// if (document.getElementById('cours_hydro_fusion_dec_').checked) {
+    //    map.addLayer(RESEAU_EAU);
+    //} else {
+       // map.removeLayer(RESEAU_EAU);
+   // }
+}
+
+	var baseLayers = {
+        "OpenStreetMap": osm,
+        "OSM Relief": osmRelief
+    };
+
+    L.control.layers(baseLayers).addTo(map);
+	
+	L.control.scale().addTo(map);
+	
+	
+</script>
+</body>
+
+</html>
+

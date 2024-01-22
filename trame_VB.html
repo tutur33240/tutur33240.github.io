@@ -218,40 +218,135 @@
 	   
 	 <div id="sous-titre"><u>Zone Naturelle d'Intérêt Écologique, Faunistique et Floristique </u></div>
 			
-		<label for="nom"> Nom des zones ZNIEFF 1 :</label>
-        <select id="nom" onchange="updateLayer('nom')">
+		<label for="NOM"> Nom des zones ZNIEFF 1 :</label>
+        <select id="NOM" onchange="updateLayer('NOM')">
 			<option value="none">Aucun</option>
             <option value="all">Tous</option>
-            <option value="LANDES ET PELOUSES D'ALTITUDE DU PLATEAU DU COSCIONE">LANDES ET PELOUSES D'ALTITUDE DU PLATEAU DU COSCIONE</option>
-            <option value="FORET DE LA FRATTE">FORET DE LA FRATTE</option>
-            <option value="PELOUSES SOMMITALES DU MONTE CINTO">PELOUSES SOMMITALES DU MONTE CINTO</option>
+            <option value="Basse vallée du Tavignano">Basse vallée du Tavignano</option>
+			<option value="FORET DE L'OSPEDALE">FORET DE L'OSPEDALE</option>
+            <option value="SOMMET DU MONTE CARDO">SOMMET DU MONTE CARDO</option>
+            <option value="Chênaie verte et juniperaie de Vallica">Chênaie verte et juniperaie de Vallica</option>
+			<option value="Punta d'Omigna, punta di Cargese, plages de Peru et de Chiuni">Punta d'Omigna, punta di Cargese, plages de Peru et de Chiuni</option>
+			<option value="CAPU SENINU et COTE OUEST DU NORD DE BUSSAGHIA">CAPU SENINU et COTE OUEST DU NORD DE BUSSAGHIA</option>
+            <option value="HETRAIES DU MASSIF DE SAN PETRONE">HETRAIES DU MASSIF DE SAN PETRONE</option>
+            <option value="FORETS ET PELOUSES SOMMITALES DU MONTE OLMELLI">FORETS ET PELOUSES SOMMITALES DU MONTE OLMELLI</option>
+            <option value="LANDES ET PELOUSES SOMMITALES DU MONTE PIANO-MAGGIORE">LANDES ET PELOUSES SOMMITALES DU MONTE PIANO-MAGGIORE</option>
+			<option value="LANDES ET PELOUSES D'ALTITUDE DU PLATEAU DU COSCIONE">LANDES ET PELOUSES D'ALTITUDE DU PLATEAU DU COSCIONE</option>
+            <option value="RESERVE NATURELLE DE SCANDOLA">RESERVE NATURELLE DE SCANDOLA</option>
+            <option value="FORET DE GHISONI">FORET DE GHISONI</option>
+            <option value="CHATAIGNERAIES ET CHENAIES DU HAUT TARAVO">CHATAIGNERAIES ET CHENAIES DU HAUT TARAVO</option>
+			<option value="COTE ROCHEUSE ET FALAISES MARITIMES DE PUNTA CIUTTONE ET PUNTA FERRAGHJOLA">COTE ROCHEUSE ET FALAISES MARITIMES DE PUNTA CIUTTONE ET PUNTA FERRAGHJOLA</option>
+            <option value="Forêt des cinq communes et col d'Arusula">Forêt des cinq communes et col d'Arusula</option>
+			<option value="EMBOUCHURES ET ZONES HUMIDES DU FIUM'ORBU ET DE L'ABATESCO">EMBOUCHURES ET ZONES HUMIDES DU FIUM'ORBU ET DE L'ABATESCO</option>
+			<option value="HETRAIES DU COSCIONE">HETRAIES DU COSCIONE</option>
+			<option value="Monte San Petru et gorges du Baracci">Monte San Petru et gorges du Baracci</option>
+			<option value="DEFILE DES STRETTE ET DE L'INZECCA">DEFILE DES STRETTE ET DE L'INZECCA</option>
+			<option value="PELOUSES SOMMITALES DU MONTE CINTO">PELOUSES SOMMITALES DU MONTE CINTO</option>
+			<option value="LANDES ET PELOUSES SOMMITALES DU MASSIF DU SAN PETRONE">LANDES ET PELOUSES SOMMITALES DU MASSIF DU SAN PETRONE</option>
 			<option value="HETRAIE DU COL DE VIZZAVONA">HETRAIE DU COL DE VIZZAVONA</option>
-            <option value="HETRAIE DE CAMPOTILE">HETRAIE DE CAMPOTILE</option>
-            <option value="SOMMETS DU MONTE D'ORO ET DE LA PUNTA MIGLIARELLO">SOMMETS DU MONTE D'ORO ET DE LA PUNTA MIGLIARELLO</option>
-            <option value="CIRQUES ET LACS GLACIAIRES DU MONTE ROTONDO">CIRQUES ET LACS GLACIAIRES DU MONTE ROTONDO</option>
+			<option value="HETRAIE DE CAMPOTILE">HETRAIE DE CAMPOTILE</option>
+			<option value="ANCIENNES MINES DE CASTIFAO">ANCIENNES MINES DE CASTIFAO</option>
+			<option value="BOTRO/LAVATORI">BOTRO/LAVATORI</option>
+			<option value="HETRAIE DU MONTE PIANO-MAGGIORE">HETRAIE DU MONTE PIANO-MAGGIORE</option>
+			<option value="MASSIF DES AIGUILLES DE POPOLASCA,RUNDINAIA vallon de CASTIGLIONE">MASSIF DES AIGUILLES DE POPOLASCA,RUNDINAIA vallon de CASTIGLIONE</option>
+			<option value="STATION DE SESELI PRAECOX DE PORTO-MARINE DE BUSSAGHIA">STATION DE SESELI PRAECOX DE PORTO-MARINE DE BUSSAGHIA</option>
+			<option value="GORGES DE L'ASCO">GORGES DE L'ASCO</option>
+			<option value="Peuplement à if de Serra di Fiumorbu">Peuplement à if de Serra di Fiumorbu</option>
+			<option value="ETANG ET ZONE HUMIDE DE PALO">ETANG ET ZONE HUMIDE DE PALO</option>
+			<option value="DELTA DU FANGO">DELTA DU FANGO</option>
+			<option value="Forêt de pin laricio de Pietrapiana">Forêt de pin laricio de Pietrapiana</option>
+			<option value="Massif de Sant'Eliseo">Massif de Sant'Eliseo</option>
+			<option value="GORGES ET FORET DE LA RESTONICA">GORGES ET FORET DE LA RESTONICA</option>
+			<option value="MONTE FALCONACCIA">MONTE FALCONACCIA</option>
+			<option value="GORGES DE SCALA DI SANTA REGINA">GORGES DE SCALA DI SANTA REGINA</option>
+			<option value="Monte Cintu, Capu di a Conca et Capu Rutalbu (Balagne)">Monte Cintu, Capu di a Conca et Capu Rutalbu (Balagne)</option>
+			<option value="LAC DE CRENA">LAC DE CRENA</option>
+			<option value="SOMMETS DU MONTE D'ORO ET DE LA PUNTA MIGLIARELLO">SOMMETS DU MONTE D'ORO ET DE LA PUNTA MIGLIARELLO</option>
+			<option value="MARE TEMPORAIRE D´ALZU DI GALLINA">MARE TEMPORAIRE D´ALZU DI GALLINA</option>
+			<option value="CIRQUE ET LAC GLACIAIRE D'ORO">CIRQUE ET LAC GLACIAIRE D'ORO</option>
+			<option value="SAPINIERE DE LA MONTAGNE DE CAGNA">SAPINIERE DE LA MONTAGNE DE CAGNA</option>
+			<option value="CIRQUES ET LACS GLACIAIRES DU MONTE ROTONDO">CIRQUES ET LACS GLACIAIRES DU MONTE ROTONDO</option>
 			<option value="PELOUSES SOMMITALES DE L'INCUDINE">PELOUSES SOMMITALES DE L'INCUDINE</option>
-            <option value="CIRQUES ET LACS GLACIAIRES DU MONTE RENOSO">CIRQUES ET LACS GLACIAIRES DU MONTE RENOSO</option>
-            <option value="FORET DE MARMANO">FORET DE MARMANO</option>
-            <option value="FORET DE BAVELLA">FORET DE BAVELLA</option>
+			<option value="Forêt de Pineta-Quarceta et massif montagneux de Punta di Forca d'Olmu">Forêt de Pineta-Quarceta et massif montagneux de Punta di Forca d'Olmu</option>
+			<option value="TUNNEL DE MURACCIOLE">TUNNEL DE MURACCIOLE</option>
+			<option value="Grotte de Pietralbella, Tourbière Moltifao, Chênaie verte">Grotte de Pietralbella, Tourbière Moltifao, Chênaie verte</option>
+			<option value="FORET DE TOVA">FORET DE TOVA</option>
+			<option value="Stations à Brassica insularis de Poggio di Nazza">Stations à Brassica insularis de Poggio di Nazza</option>
+			<option value="Riventosa / Poggio">Riventosa / Poggio</option>
+			<option value="CHAOS DU MANGANELLU">CHAOS DU MANGANELLU</option>
+			<option value="ANCIENNE CARRIERE RD 14, BORD TAVIGNANO">ANCIENNE CARRIERE RD 14, BORD TAVIGNANO</option>
+			<option value="PUNTA VALIDORI-PUNTA DI STOLLU">PUNTA VALIDORI-PUNTA DI STOLLU</option>
+			<option value="Chênaies vertes d'Acoulese à Castifau">Chênaies vertes d'Acoulese à Castifau</option>
+			<option value="HETRAIE-SAPINIERE DE PUNTENIELLO">HETRAIE-SAPINIERE DE PUNTENIELLO</option>
+			<option value="Forêts de Tartaghjine et de Milaghja">Forêts de Tartaghjine et de Milaghja</option>
+			<option value="RESERVOIR OSPEDALE, FORET AUTOUR DU LAC">RESERVOIR OSPEDALE, FORET AUTOUR DU LAC</option>
+			<option value="RAVINS SILICEUX DE POLISCHELLO">RAVINS SILICEUX DE POLISCHELLO</option>
+			<option value="FORET D'ALTITUDE DE LA HAUTE LUANA">FORET D'ALTITUDE DE LA HAUTE LUANA</option>
+			<option value="BOISEMENTS DE LA PLAINE DE SAGONE et TERASSES SABLEUSES">BOISEMENTS DE LA PLAINE DE SAGONE et TERASSES SABLEUSES</option>
+			<option value="GORGES DE LA SPELUNCA">GORGES DE LA SPELUNCA</option>
+			<option value="CIRQUES ET LACS GLACIAIRES DU MONTE RENOSO">CIRQUES ET LACS GLACIAIRES DU MONTE RENOSO</option>
+			<option value="PONT D'ASCO">PONT D'ASCO</option>
+			<option value="MONTE SUPIETRA, MONTE SANT ANGELO">MONTE SUPIETRA, MONTE SANT ANGELO</option>
+			<option value="SAPINIERE DU PLATEAU DE CARALBA">SAPINIERE DU PLATEAU DE CARALBA</option>
+			<option value="GORGES ET FORET DU TAVIGNANO">GORGES ET FORET DU TAVIGNANO</option>
+			<option value="SOMMET CALCAIRE DE LA PUNTA DI FORNELLO">SOMMET CALCAIRE DE LA PUNTA DI FORNELLO</option>
+			<option value="FORET DE MARMANO">FORET DE MARMANO</option>
+			<option value="CHENAIE PUBESCENTE DE POGGIOLA">CHENAIE PUBESCENTE DE POGGIOLA</option>
+			<option value="FORET DE BAVELLA">FORET DE BAVELLA</option>
+			<option value="PUNTA D'ORCHINU, GOLFE DE TOPITI, ARONE">PUNTA D'ORCHINU, GOLFE DE TOPITI, ARONE</option>
+			<option value="FORET D'ALTITUDE DE CORSIA-CALACUCCIA">FORET D'ALTITUDE DE CORSIA-CALACUCCIA</option>
+			<option value="Cima a U Borgu">Cima a U Borgu</option>
+			<option value="VALLEE DU VERGHELLO">VALLEE DU VERGHELLO</option>
+			<option value="Boziu et Valle-di-Rostino">Boziu et Valle-di-Rostino</option>
+			<option value="STATION DE TELINE LINIFOLIA DE GIROLATA">STATION DE TELINE LINIFOLIA DE GIROLATA</option>
+			<option value="CAPU D’ORTU, CAPU DI U VITTULU">CAPU D’ORTU, CAPU DI U VITTULU</option>
 			<option value="CUVETTE LACUSTRE ET POZZINE DU NINO">CUVETTE LACUSTRE ET POZZINE DU NINO</option>
-            <option value="FORETS DE LIBIU, GUAGNU ET PASTRICCIOLA ET MILIEUX RUPESTRES DE GUAGNU">FORETS DE LIBIU, GUAGNU ET PASTRICCIOLA ET MILIEUX RUPESTRES DE GUAGNU</option>
-       </select>
+			<option value="FORETS DE LIBIU, GUAGNU ET PASTRICCIOLA ET MILIEUX RUPESTRES DE GUAGNU">FORETS DE LIBIU, GUAGNU ET PASTRICCIOLA ET MILIEUX RUPESTRES DE GUAGNU</option>
+			<option value="CHENAIE VERTE ET CALANCHES DE PIANA">CHENAIE VERTE ET CALANCHES DE PIANA</option>
+	   </select>
 	   
-	   <label for="arthur"> Nom des zones ZNIEFF 2 :</label>
-        <select id="arthur" onchange="updateLayer('arthur')">
+	   <label for="noma"> Nom des zones ZNIEFF 2 :</label>
+        <select id="noma" onchange="updateLayer('noma')">
 			<option value="none">Aucun</option>
             <option value="all">Tous</option>
             <option value="CRETES ET HAUTS VERSANTS DU MASSIF DE BAVELLA">CRETES ET HAUTS VERSANTS DU MASSIF DE BAVELLA</option>
+            <option value="HAUTS MAQUIS PREFORESTIERS DES COLLINES ORIENTALES DE LA CASTAGNICCIA">HAUTS MAQUIS PREFORESTIERS DES COLLINES ORIENTALES DE LA CASTAGNICCIA</option>
+            <option value="SUBERAIE ET STATIONS A TORTUE D'HERMANN DE PORTO VECCHIO">SUBERAIE ET STATIONS A TORTUE D'HERMANN DE PORTO VECCHIO</option>
+			<option value="FORETS DE BAROCAGGIO MARGHESE ET ZONZA">FORETS DE BAROCAGGIO MARGHESE ET ZONZA</option>
             <option value="FORET D'ALTITUDE DE VALDONIELLO">FORET D'ALTITUDE DE VALDONIELLO</option>
             <option value="FORET D'ALTITUDE DE CAROZZICA">FORET D'ALTITUDE DE CAROZZICA</option>
-			<option value="CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MASSIF DE L'INCUDINE">CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MASSIF DE L'INCUDINE</option>
+            <option value="CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MASSIF DE L'INCUDINE">CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MASSIF DE L'INCUDINE</option>
+			<option value="CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MONTE CINTO">CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MONTE CINTO</option>
             <option value="CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MONTE CINTO">CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MONTE CINTO</option>
             <option value="FORETS DU FIUMORBU">FORETS DU FIUMORBU</option>
-            <option value="CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MONTE ROTONDO">CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MONTE ROTONDO</option>
-			<option value="CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MONTE RENOSO">CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MONTE RENOSO</option>
+			<option value="CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MONTE ROTONDO">CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MONTE ROTONDO</option>
+            <option value="CHENAIE VERTE DU BASSIN DU FANGO">CHENAIE VERTE DU BASSIN DU FANGO</option>
+            <option value="MAQUIS DU BASSIN DU FANGO">MAQUIS DU BASSIN DU FANGO</option>
+			<option value="CHATAIGNERAIE CHENAIE DE RENNO-VICO">CHATAIGNERAIE CHENAIE DE RENNO-VICO</option>
+            <option value="CHATAIGNERAIE-CHENAIE DE BASTELICA">CHATAIGNERAIE-CHENAIE DE BASTELICA</option>
+            <option value="CHATAIGNERAIES ET BOIS DES VERSANTS SUD ET OUEST DU MASSIF DU SAN PETRONE">CHATAIGNERAIES ET BOIS DES VERSANTS SUD ET OUEST DU MASSIF DU SAN PETRONE</option>
+            <option value="CHATAIGNERAIES DE LA PETITE CASTAGNICCIA">CHATAIGNERAIES DE LA PETITE CASTAGNICCIA</option>
+			<option value="FORET D'ALTITUDE D'AITONE">FORET D'ALTITUDE D'AITONE</option>
+            <option value="CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MONTE RENOSO">CRETES ET HAUTS VERSANTS ASYLVATIQUES DU MONTE RENOSO</option>
             <option value="FORETS D'ALTITUDE DU HAUT TARAVO">FORETS D'ALTITUDE DU HAUT TARAVO</option>
-            <option value="SAPINIERE DU HAUT RAVIN DE MARMANO">SAPINIERE DU HAUT RAVIN DE MARMANO</option>  
-       </select>
+			<option value="VALLON DE LA TASSINETTA">VALLON DE LA TASSINETTA</option>
+            <option value="CRETES ET HAUTS VERSANTS DE LA MONTAGNE DE CAGNA">CRETES ET HAUTS VERSANTS DE LA MONTAGNE DE CAGNA</option>
+            <option value="HETRAIE DE SELLOLA">HETRAIE DE SELLOLA</option>
+			<option value="CUVETTE SYLVOPASTORALE D'ASCO">CUVETTE SYLVOPASTORALE D'ASCO</option>
+            <option value="Massif rocheux de Monte Cintu à Capu di a Veta">Massif rocheux de Monte Cintu à Capu di a Veta</option>
+            <option value="MASSIF CALCAIRE DE MONTE SUPIETRA - OMESSA">MASSIF CALCAIRE DE MONTE SUPIETRA - OMESSA</option>
+            <option value="CHATAIGNERAIE DE GUAGNO-SOCCIA">CHATAIGNERAIE DE GUAGNO-SOCCIA</option>
+			<option value="CHATAIGNERAIE-CHENAIE DE ZICAVO">CHATAIGNERAIE-CHENAIE DE ZICAVO</option>
+            <option value="FORET DE LONCA-LINDINOSA">FORET DE LONCA-LINDINOSA</option>
+            <option value="HETRAIE DE BASTELICA">HETRAIE DE BASTELICA</option>	
+			<option value="MAQUIS PREFORESTIER DU TARAVO MOYEN">MAQUIS PREFORESTIER DU TARAVO MOYEN</option>
+            <option value="CHENAIE VERTE D'ESIGNA-REVINDA-MENASINA-PAOMIA">CHENAIE VERTE D'ESIGNA-REVINDA-MENASINA-PAOMIA</option>
+            <option value="OLIVERAIES D'OLMETO-SANTA MARIA FIGANIELLA">OLIVERAIES D'OLMETO-SANTA MARIA FIGANIELLA</option>
+			<option value="FORETS CLAIRES ET MAQUIS PREFORESTIERS DU HAUT RIZZANESE">FORETS CLAIRES ET MAQUIS PREFORESTIERS DU HAUT RIZZANESE</option>
+            <option value="FORET DE ROSPA-SORBA">FORET DE ROSPA-SORBA</option>
+            <option value="MASSIF FORESTIER DE VIZZAVONA-VIVARIO-VENACO">MASSIF FORESTIER DE VIZZAVONA-VIVARIO-VENACO</option>			
+			<option value="SAPINIERE DU HAUT RAVIN DE MARMANO">SAPINIERE DU HAUT RAVIN DE MARMANO</option>
+	   </select>
 	  
 		<div id="sous-titre"><u>Surfaces d'eau </u></div>
 		
@@ -297,55 +392,6 @@
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 	
-	// Création des icônes personnalisées avec des images
-	var icon1 = L.icon({
-		iconUrl: 'lien_vers_image_1.png',
-		iconSize: [32, 32],
-		iconAnchor: [16, 32],
-		popupAnchor: [0, -32]
-	});
-
-	var icon2 = L.icon({
-		iconUrl: 'lien_vers_image_2.png',
-		iconSize: [32, 32],
-		iconAnchor: [16, 32],
-		popupAnchor: [0, -32]
-	});
-
-	var icon3 = L.icon({
-		iconUrl: 'lien_vers_image_3.png',
-		iconSize: [32, 32],
-		iconAnchor: [16, 32],
-		popupAnchor: [0, -32]
-	});
-
-	var icon4 = L.icon({
-		iconUrl: 'lien_vers_image_4.png',
-		iconSize: [32, 32],
-		iconAnchor: [16, 32],
-		popupAnchor: [0, -32]
-	});
-
-	// Création et ajout des marqueurs personnalisés
-
-	// Ajout des marqueurs avec des popups contenant des images
-	var marker1 = L.marker([42.21251462161299, 9.0121445021261]).addTo(map)
-		.bindPopup('<h3>Le lac de Mélo</h3><h4>Alt. 1710m</h4><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Corse_GR20_-_Lac_de_Melo.jpg/800px-Corse_GR20_-_Lac_de_Melo.jpg" alt="Lac de Mélo" style="width:100%;height:auto;">');
-
-	var marker2 = L.marker([42.21315033014233, 9.022808964719303]).addTo(map)
-		.bindPopup('<h3>Le Lac de Capitello</h3><h4>Alt. 1930m</h4><img src="https://res.cloudinary.com/easymountain/image/upload/f_webp,q_100,w_1100/v1690203670/do-web/prod/lac_melo_capitello_corse_4819615344.jpg" alt="Lac de Capitello" style="width:100%;height:auto;">');
-
-	var marker3 = L.marker([42.25686011247629, 8.938302110477084]).addTo(map)
-		.bindPopup('<h3>Le Lac de Nino</h3><h4>Alt. 1743m</h4><img src="https://gr20-infos.com/wp-content/uploads/2018/11/lac-glaciaire-1024x538.jpg" alt="Lac de Nino" style="width:100%;height:auto;">');
-
-	var marker4 = L.marker([42.11710415751318, 9.110091872709896]).addTo(map)
-		.bindPopup('<h3>Les cascades des Anglais</h3><h4>Alt. 1092m</h4><img src="https://gr20-infos.com/wp-content/uploads/2018/11/ajaccio.jpg" alt="Cascades des Anglais" style="width:100%;height:auto;">');
-
-
-    var osmRelief = L.tileLayer("http://a.tile.opentopomap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        });
-
       var url_ETAPE = 'http://localhost:8080/geoserver/postgrsql/wms';
       var ETAPE_GR20 = L.tileLayer.wms(url_ETAPE, {
             layers: 'ETAPE_GR20',
@@ -353,7 +399,7 @@
             transparent: true,
             attribution: "mylayer",
             crs: L.CRS.EPSG2154,
-            opacity: 0.5,
+            opacity: 1,
             color: '31B54B',
             borderColor: '31B54B'
         }).addTo(map);
@@ -368,17 +414,7 @@
             opacity: 0.1,
             color: '31B54B',
             borderColor: '31B54B'
-        }).addTo(map);
-		
-	 // var url_COURS_EAU = 'http://localhost:8080/geoserver/postgrsql/wms';
-      //var COURS_EAU = L.tileLayer.wms(url_COURS_EAU, {
-         //   layers: 'cours_hydro_fusion_dec ',
-          //  format: 'image/png',
-          //  transparent: true,
-          //  attribution: "mylayer",
-         //   crs: L.CRS.EPSG2154,
-         //   opacity: 0.7,
-       // }).addTo(map);
+        });
 		
 	  var url_SURFACE_EAU = 'http://localhost:8080/geoserver/postgrsql/wms';
       var SURFACE_EAUAll = L.tileLayer.wms(url_SURFACE_EAU, {
@@ -493,7 +529,7 @@
 
     var url_znieff1 = 'http://localhost:8080/geoserver/postgrsql/wms';
     var znieff1All = L.tileLayer.wms(url_znieff1, {
-        layers: 'TEST',
+        layers: 'ZNIEFFI',
         format: 'image/png',
         transparent: true,
         attribution: "mylayer",
@@ -502,7 +538,7 @@
     });
 
     var znieff1Filtered = L.tileLayer.wms(url_znieff1, {
-        layers: 'TEST',
+        layers: 'ZNIEFFI',
         format: 'image/png',
         transparent: true,
         attribution: "mylayer",
@@ -511,11 +547,11 @@
     });
 	
 	// Initialiser la couche CORRIDOR avec un filtre vide
-    znieff1Filtered.setParams({ CQL_FILTER: 'nom=\'\'' });
+    znieff1Filtered.setParams({ CQL_FILTER: 'NOM=\'\'' });
 
     var url_znieff2 = 'http://localhost:8080/geoserver/postgrsql/wms';
     var znieff2All = L.tileLayer.wms(url_znieff2, {
-        layers: 'test6',
+        layers: 'znieff',
         format: 'image/png',
         transparent: true,
         attribution: "mylayer",
@@ -524,7 +560,7 @@
     });
 
     var znieff2Filtered = L.tileLayer.wms(url_znieff2, {
-        layers: 'test6',
+        layers: 'znieff',
         format: 'image/png',
         transparent: true,
         attribution: "mylayer",
@@ -532,8 +568,10 @@
         opacity: 0.5,
     });
 	
+	
+	
 	// Initialiser la couche CORRIDOR avec un filtre vide
-    znieff2Filtered.setParams({ CQL_FILTER: 'arthur=\'\'' });
+    znieff2Filtered.setParams({ CQL_FILTER: 'noma=\'\'' });
 
     // Ajout de la couche RESERVOIRFiltered à la carte au chargement
 	map.addLayer(RESEAU_EAUFiltered);
@@ -543,9 +581,11 @@
     map.addLayer(znieff2Filtered);
     map.addLayer(RESERVOIRFiltered);
     map.addLayer(sites_inscritsFiltered);
+	map.addLayer(PARC);
 	
 	
 	// Utilisez bringToFront() pour déplacer les couches vers l'avant
+	PARC.bringToFront();
 	RESEAU_EAUFiltered.bringToFront();
 	SURFACE_EAUFiltered.bringToFront();
 	CORRIDORFiltered.bringToFront();
@@ -554,6 +594,8 @@
 	RESERVOIRFiltered.bringToFront();
 	sites_inscritsFiltered.bringToFront();
 	ETAPE_GR20.bringToFront();
+	
+	
 
     function updateLayer(layerType) {
         var selectedType = document.getElementById(layerType).value;
@@ -568,11 +610,11 @@
                 layerFiltered = sites_inscritsFiltered;
                 layerAll = sites_inscritsAll;
                 break;
-            case 'nom':
+            case 'NOM':
                 layerFiltered = znieff1Filtered;
                 layerAll = znieff1All;
                 break;
-            case 'arthur':
+            case 'noma':
                 layerFiltered = znieff2Filtered;
                 layerAll = znieff2All;
                 break;
@@ -608,31 +650,34 @@
         }
     }
 	
-	 function toggleLayerVisibility(layerName) {
-    var layer = window[layerName];
+	function toggleLayerVisibility(layerName) {
+		var layer = window[layerName];
 
-    if (document.getElementById('etape_gr20').checked) {
-        map.addLayer(ETAPE_GR20);
-    } else {
-        map.removeLayer(ETAPE_GR20);
-    }
+		if (document.getElementById('etape_gr20').checked) {
+			map.addLayer(ETAPE_GR20);
+		} else {
+			map.removeLayer(ETAPE_GR20);
+		}
 
-    if (document.getElementById('PARC').checked) {
-        map.addLayer(PARC);
-    } else {
-        map.removeLayer(PARC);
-    }
-	// if (document.getElementById('cours_hydro_fusion_dec_').checked) {
-    //    map.addLayer(RESEAU_EAU);
-    //} else {
-       // map.removeLayer(RESEAU_EAU);
-   // }
-}
+		if (document.getElementById('PARC').checked) {
+			map.addLayer(PARC);
+		} else {
+			map.removeLayer(PARC);
+		}
+	}
 
+	var osmRelief = L.tileLayer("http://a.tile.opentopomap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });
+	
+	
+	
 	var baseLayers = {
         "OpenStreetMap": osm,
         "OSM Relief": osmRelief
     };
+	
+	
 
     L.control.layers(baseLayers).addTo(map);
 	

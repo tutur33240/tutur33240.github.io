@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GR 20</title>
+
+    <!-- Liens vers les bibliothèques Leaflet et Leaflet.markercluster -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.0/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.0/dist/MarkerCluster.Default.css" />
+
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+
+        #map-container {
+            position: relative;
+            height: 100%;
+        }
+
+        #map {
+            height: 100%;
+        }
+
+        #map-title {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            font-weight: bold;
+            color: #0000a8;
+            z-index: 1000;
+        }
+
+        #coordinates {
+            position: absolute;
+            bottom: 10px;
+            left: 100px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #0000a8;
+            background-color: #ffffff;
+            padding: 5px;
+            z-index: 1000;
+        }
+
+          #form-container {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            z-index: 2000; /* Mettre le formulaire à l'avant en ajustant le z-index */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        select {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        #form-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #0000a8;
+            margin-bottom: 10px;
+        }
+
+        #sous-titre {
+            font-size: 14px;
+            font-weight: bold;
+            color: #0000a8;
+            margin-bottom: 10px;
+        }
+
+
+.legend {
+    position: absolute;
+    bottom: 20px; /* Ajustez la valeur selon vos préférences */
+    right: 20px;
+    padding: 10px;
+    border: 4px solid #1b2cfc;
+    background-color: #ffffff;
+    white-space: nowrap; /* Empêche le retour à la ligne */
+}
+
+.legend i {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+    opacity: 0.7;
+}
+
+.legend .SOMMETS {
+    background-color: #bebebe;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.legend .POINTS_EAU {
+    background-color: #0132fb;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.legend .Points_Vue {
+    background-color: #37dadf;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.legend .BIVOUAC {
+    background-color: #fc8d0a;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.legend .BERGERIE {
+    background-color: #fb59ff;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.legend .EDIFICES {
+    background-color: #fc1b1b;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.legend .PONTS {
+    background-color: #1b2cfc;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.legend .SENTIER {
+    background-color: #fb0101;
+    height: 2px;
+    width: 20px;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.legend .PARC {
+    background-color: #fc4b1b;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    margin-right: 5px;
+}
+		
+		
+    </style>
+</head>
+<body>
+
+<div id="form-container">
+    <div id="form-title"><u><strong>Guide du montagnard</strong></u></div>
+	<label for="markerSelection">Sélectionnez un point de passage:</label>
+    <select id="markerSelection" onchange="updateMap()">
+        <option value="none">Aucun</option>
+        <option value="marker1">Le lac de Mélo</option>
+        <option value="marker2">Le Lac de Capitello</option>
+        <option value="marker3">Le Lac de Nino</option>
+        <option value="marker4">Les cascades des Anglais</option>
+		<option value="marker5">Calenzana</option>
+		<option value="marker6">Bocca a u Saltu</option>
+		<option value="marker7">Cirque de la Solitude</option>
+		<option value="marker8">Monte Rotondo</option>
+		<option value="marker9">Paglia Orba</option>
+		<option value="marker10">Col de Vergio</option>
+		<option value="marker11">Vizzavona</option>
+		<option value="marker12">Col de Bavella</option>
+		<option value="marker13">Aiguilles de Bavella</option>
+		<option value="marker14">Conca</option>
+		<option value="marker15">La passerelle de Spasimata</option>
+    </select>
+	<div id="toggleMarkers">
+        <label for="toggleMarkersCheckbox">Points de passages:</label>
+        <input type="checkbox" id="toggleMarkersCheckbox" onchange="toggleMarkersVisibility()">
+    </div>
+    <div class="legend">
+        <div id="legend-title"><strong>Légende</strong></div>
+		
+        <i class="legend-icon SOMMETS"></i><span>Montagnes de Corse</span><br>
+        <i class="legend-icon POINTS_EAU"></i><span>Points d'eau</span><br>
+        <i class="legend-icon Points_Vue"></i><span>Points de vue</span><br>
+        <i class="legend-icon BIVOUAC"></i><span>Bivouacs</span><br>
+        <i class="legend-icon BERGERIE"></i><span>Bergeries</span><br>
+        <i class="legend-icon EDIFICES"></i><span>Edifices</span><br>
+        <i class="legend-icon SENTIER"></i><span>Sentier du GR20</span><br>
+        <i class="legend-icon PARC"></i><span>Parc Naturel Regional de Corse</span><br>
+        <i class="legend-icon PONTS"></i><span>Ponts</span><br>
+    </div>
+            
+            <div id="sous-titre"><u>Les sommets (proche du GR.20) </u></div>
+            <label for="type"> Les montagnes du GR.20 (par type):</label>
+        <select id="type" onchange="updateLayer('type')">
+			<option value="none">Aucun</option>
+            <option value="all">Tous</option>
+            <option value="sommet">Sommets</option>
+            <option value="col">Cols</option>
+            <option value="crete">Crètes</option>
+            <option value="breche">Brèches</option>
+        </select>
+		
+            <div id="sous-titre"><u>Les détails du parcours </u></div>
+            <label for="name"> Points d'eau:</label>
+        <select id="name" onchange="updateLayer('name')">
+			<option value="none">Aucun</option>
+            <option value="all">Tous</option>
+            <option value="BAIGNADE">Points de baignades</option>
+			<option value="CASCADE">Cascades</option>
+            <option value="DOUCHE">Douches de refuges</option>
+            <option value="FONTAINE">Fontaines</option>
+			<option value="SOURCE OFF">Source d'eau arrêtée</option>
+            <option value="TOILETTE">Toilettes de refuges</option>
+			<option value="SOURCE">Sources d'eau potable</option>
+        </select>
+		<label for="name6"> Points de vue:</label>
+        <select id="name6" onchange="updateLayer('name6')">
+			<option value="none">Aucun</option>
+            <option value="all">Tous</option>
+            <option value="BOCCA PICCAIA">Bocca Poccaia</option>
+            <option value="PROMONTOIRE D'ARGHJOVA">Promontoire d'Arghjova</option>
+            <option value="COL DE BAVELLA">Col de Bavella</option>
+            <option value="INCONNUE">Points de vue sans noms</option>
+        </select>
+		<label for="name7"> Zone de bivouac par refuge:</label>
+        <select id="name7" onchange="updateLayer('name7')">
+			<option value="none">Aucun</option>
+            <option value="all">Tous</option>
+            <option value="BIVOUAC DE CIOTTULU DI I MORI">BIVOUAC DE CIOTTULU DI I MORI</option>
+            <option value="BIVOUAC DE TIGHIETTU">BIVOUAC DE TIGHIETTU</option>
+            <option value="BIVOUAC H HAUT-ASCO">BIVOUAC HAUT-ASCO</option>
+            <option value="BIVOUAC DE CARROZZU">BIVOUAC DE CARROZZU</option>
+			<option value="BIVOUAC DE L'ORTU DI U PIOBBU">BIVOUAC DE L'ORTU DI U PIOBBU</option>
+            <option value="BIVOUAC DE VERGIO">BIVOUAC DE VERGIO</option>
+            <option value="BIVOUAC DE VACCAGHIA">BIVOUAC DE VACCAGHIA</option>
+            <option value="BIVOUAC DE MANGANU">BIVOUAC DE MANGANU</option>
+			<option value="BIVOUAC DE PETRA PIANA">BIVOUAC DE PETRA PIANA</option>
+            <option value="BIVOUAC DE L'ONDA">BIVOUAC DE L'ONDA</option>
+            <option value="BIVOUAC VIZZAVONA">BIVOUAC VIZZAVONA</option>
+            <option value="BIVOUAC E CAPANELLE">BIVOUAC E CAPANELL</option>
+			<option value="BIVOUAC DU COL DE VERDE">BIVOUAC DU COL DE VERDE</option>
+            <option value="BIVOUAC USCIULU">BIVOUAC USCIULU</option>
+            <option value="BIVOUAC D'ASINAU">BIVOUAC D'ASINAU</option>
+            <option value="BIVOUAC DE PALIRI">BIVOUAC DE PALIRI</option>
+        </select>
+		<label for="noms"> Bergeries :</label>
+        <select id="noms" onchange="updateLayer('noms')">
+			<option value="none">Aucun</option>
+            <option value="all">Tous</option>
+            <option value="BERGERIE DE GIALGONE">Bergerie de Gialgone</option>
+            <option value="BERGERIE DE RADULE">Bergerie de Radule</option>
+            <option value="BERGERIE DE BALLONE">Bergerie de Ballone</option>
+            <option value="CABANES DE CAPELLU">Cabanes de Capellu</option>
+			<option value="BERGERIE D'ASINAU">Bergerie d'Asinau</option>
+            <option value="BERGERIE INZECCHE">Bergerie Inzechche</option>
+            <option value="BERGERIE DE TULA">Bergerie de Tula</option>
+        </select>
+		<label for="name1"> Monuments historiques et religueux :</label>
+        <select id="name1" onchange="updateLayer('name1')">
+			<option value="none">Aucun</option>
+            <option value="all">Tous</option>
+            <option value="CHAPELLE SAN PEDRU">Chapelle San Pedru</option>
+            <option value="ORATOIRE SAINT-ANTOINE-DE-PADOUE">Oratoire Saint-Antoine-De-Padoue</option>
+            <option value="CHAPPELLE DE LA SAINTE VIERGE">Chapelle de la Sainte Vierge</option>
+            <option value="CHAPPELLE DE LA SAINTE VIERGE">Chapelle de la Sainte Vierge</option>
+			<option value="NOTRE-DAME-DES NEIGES">Notre Dame des Neiges</option>
+        </select>
+		
+		<label for="ETAPE_GR20">Sentier du GR20:</label>
+		<input type="checkbox" id="ETAPE_GR20" onclick="toggleLayerVisibility('ETAPE_GR20')" checked>
+		<label for="PARC">Parc Naturel Régional de Corse :</label>
+		<input type="checkbox" id="PARC" onclick="toggleLayerVisibility('parc_corse')" checked>
+		<label for="PONTS">Ponts :</label>
+		<input type="checkbox" id="PONTS" onclick="toggleLayerVisibility('PONTS')" checked>
+        </div>
+	  
+</div>
+    <div id="map-container">
+        <div id="map-title" style="background-color: #ffffff; padding: 10px;">Carte touristique du GR20 </div>
+        <div id="coordinates"></div>
+        <div id="map">
+            <!-- Contenu de la carte -->
+		
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+<script>
+    // Création de la carte
+    var map = L.map('map').setView([42.2, 9.0], 9); // Coordonnées centrales de la Corse
+
+    // Ajout des tuiles ArcGIS Online à la carte
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: '© Esri',
+        maxZoom: 18,
+    }).addTo(map);
+	
+	
+	var markers = L.markerClusterGroup();
+
+    var marker1 = L.marker([42.21251462161299, 9.0121445021261]);
+    var marker2 = L.marker([42.21315033014233, 9.022808964719303]);
+    var marker3 = L.marker([42.25686011247629, 8.938302110477084]);
+    var marker4 = L.marker([42.11710415751318, 9.110091872709896]);
+	var marker5 = L.marker([42.505858506072876, 8.855767466184503]);
+	var marker6 = L.marker([42.27834124665728, 8.831242957460923]);
+	var marker7 = L.marker([42.37597899877692, 8.90794687286008]);
+	var marker8 = L.marker([42.21638826163448, 9.057889625118811]);
+	var marker9= L.marker([42.343176148489746, 8.878266042156152]);
+	var marker10= L.marker([42.290015975600134, 8.878562042125257]);
+	var marker11= L.marker([42.128199664388134, 9.133823610126226]);
+	var marker12= L.marker([41.796040103828, 9.224388471035278]);
+	var marker13= L.marker([41.80951100244966, 9.212934957190324]);
+	var marker14 = L.marker([41.74120846045917, 9.329717143019815]);
+	var marker15 = L.marker([42.42428456969905, 8.897913068428512]);
+		
+	
+
+    marker1.bindPopup('<h3>Le lac de Mélo</h3><h4>Alt. 1710m</h4><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Corse_GR20_-_Lac_de_Melo.jpg/800px-Corse_GR20_-_Lac_de_Melo.jpg" alt="Lac de Mélo" style="width:100%;height:auto;">');
+    marker2.bindPopup('<h3>Le Lac de Capitello</h3><h4>Alt. 1930m</h4><img src="https://res.cloudinary.com/easymountain/image/upload/f_webp,q_100,w_1100/v1690203670/do-web/prod/lac_melo_capitello_corse_4819615344.jpg" alt="Lac de Capitello" style="width:100%;height:auto;">');
+    marker3.bindPopup('<h3>Le Lac de Nino</h3><h4>Alt. 1743m</h4><img src="https://gr20-infos.com/wp-content/uploads/2018/11/lac-glaciaire-1024x538.jpg" alt="Lac de Nino" style="width:100%;height:auto;">');
+    marker4.bindPopup('<h3>Les cascades des Anglais</h3><h4>Alt. 1092m</h4><img src="https://gr20-infos.com/wp-content/uploads/2018/11/ajaccio.jpg" alt="Cascades des Anglais" style="width:100%;height:auto;">');
+    marker5.bindPopup('<h3>Calenzana</h3><h4>Alt. 250m</h4><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Calenzana-Village.jpg/280px-Calenzana-Village.jpg" alt="Calenzana" style="width:100%;height:auto;">');
+    marker6.bindPopup('<h3>Bocca a u Saltu</h3><h4>Alt. 1276m</h4><img src="https://s1.wklcdn.com/image_6/209863/5082994/2619916.700x525.jpg" alt="Bocca a u Saltu" style="width:100%;height:auto;">');
+    marker7.bindPopup('<h3>Cirque de la Solitude</h3><h4>Alt. 2000m</h4><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Punta_Minuta_3.jpg/280px-Punta_Minuta_3.jpg" alt="Cirque de la Solitude" style="width:100%;height:auto;">');
+    marker8.bindPopup('<h3>Monte Rotondo</h3><h4>Alt. 2622m</h4><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Tralonca_vue_du_Monte_Rotondo.jpg/280px-Tralonca_vue_du_Monte_Rotondo.jpg" alt="Monte Rotondo" style="width:100%;height:auto;">');
+    marker9.bindPopup('<h3>Paglia Orba</h3><h4>Alt. 2525m</h4><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Paglia_Orba.jpg/280px-Paglia_Orba.jpg" alt="Paglia Orba" style="width:100%;height:auto;">');
+    marker10.bindPopup('<h3>Col de Vergio</h3><h4>Alt. 1477m</h4><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Col_de_Vergio_vue_sur_lac_de_Calacuccia.jpg/280px-Col_de_Vergio_vue_sur_lac_de_Calacuccia.jpg" alt="Col de Vergio" style="width:100%;height:auto;">');
+    marker11.bindPopup('<h3>Vizzavona</h3><h4>Alt. 1161m</h4><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Vivario-Monte_d%27Oro.jpg/280px-Vivario-Monte_d%27Oro.jpg" alt="Vizzavona" style="width:100%;height:auto;">');
+    marker12.bindPopup('<h3>Col de Bavella</h3><h4>Alt. 1217m</h4><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Zonza_Bavelle_5JPG.jpg/280px-Zonza_Bavelle_5JPG.jpg" alt="Col de Bavella" style="width:100%;height:auto;">');
+    marker13.bindPopup('<h3>Aiguilles de Bavella</h3><h4>Alt. 1857m</h4><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Bavella-Massiv_Korsika.jpg/280px-Bavella-Massiv_Korsika.jpg" alt="Aiguilles de Bavella" style="width:100%;height:auto;">');
+    marker14.bindPopup('<h3>Conca</h3><h4>Alt. 250m</h4><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Conca-warly.jpg/280px-Conca-warly.jpg" alt="Conca" style="width:100%;height:auto;">');
+    marker15.bindPopup('<h3>La passerelle de Spasimata</h3><h4>Alt. 528m</h4><img src="https://www.kalysteo.com/album/cirque-bonifatu.jpg" alt="La passerelle de Spasimata" style="width:100%;height:auto;">');
+
+
+    markers.addLayer(marker1);
+    markers.addLayer(marker2);
+    markers.addLayer(marker3);
+    markers.addLayer(marker4);
+	markers.addLayer(marker5);
+    markers.addLayer(marker6);
+    markers.addLayer(marker7);
+    markers.addLayer(marker8);
+	markers.addLayer(marker9);
+    markers.addLayer(marker10);
+    markers.addLayer(marker11);
+    markers.addLayer(marker12);
+	markers.addLayer(marker13);
+    markers.addLayer(marker14);
+    markers.addLayer(marker15);
+    
+
+    //map.addLayer(markers);
+
+	var selectedMarker;
+
+    function updateMap() {
+        var selection = document.getElementById('markerSelection').value;
+        var newCenter;
+        var newZoom;
+
+        if (selection === 'marker1') {
+            selectedMarker = marker1;
+            newCenter = marker1.getLatLng();
+            newZoom = 19; // Définissez le niveau de zoom souhaité pour le marqueur 1
+        } else if (selection === 'marker2') {
+            selectedMarker = marker2;
+            newCenter = marker2.getLatLng();
+            newZoom = 19; // Définissez le niveau de zoom souhaité pour le marqueur 2
+        } else if (selection === 'marker3') {
+            selectedMarker = marker3;
+            newCenter = marker3.getLatLng();
+            newZoom = 19; // Définissez le niveau de zoom souhaité pour le marqueur 3
+        } else if (selection === 'marker4') {
+            selectedMarker = marker4;
+            newCenter = marker4.getLatLng();
+            newZoom = 19; // Définissez le niveau de zoom souhaité pour le marqueur 4
+        } else if (selection === 'marker5') {
+            selectedMarker = marker5;
+            newCenter = marker5.getLatLng();
+            newZoom = 19; // Définissez le niveau de zoom souhaité pour le marqueur 3
+        } else if (selection === 'marker6') {
+            selectedMarker = marker6;
+            newCenter = marker6.getLatLng();
+            newZoom = 19; // Définissez le niveau de zoom souhaité pour le marqueur 3
+        } else if (selection === 'marker7') {
+            selectedMarker = marker7;
+            newCenter = marker7.getLatLng();
+            newZoom = 19; // Définissez le niveau de zoom souhaité pour le marqueur 3
+        } else if (selection === 'marker8') {
+            selectedMarker = marker8;
+            newCenter = marker8.getLatLng();
+            newZoom = 19; // Définissez le niveau de zoom souhaité pour le marqueur 3
+        } else if (selection === 'marker9') {
+            selectedMarker = marker9;
+            newCenter = marker9.getLatLng();
+            newZoom = 19; // Définissez le niveau de zoom souhaité pour le marqueur 3
+        } else if (selection === 'marker10') {
+            selectedMarker = marker10;
+            newCenter = marker10.getLatLng();
+            newZoom = 19; // Définissez le niveau de zoom souhaité pour le marqueur 3
+        } else if (selection === 'marker11') {
+            selectedMarker = marker11;
+            newCenter = marker11.getLatLng();
+            newZoom = 19; // Définissez le niveau de zoom souhaité pour le marqueur 3
+        } else if (selection === 'marker12') {
+            selectedMarker = marker12;
+            newCenter = marker12.getLatLng();
+            newZoom = 19; // Définissez le niveau de zoom souhaité pour le marqueur 3
+        } else if (selection === 'marker13') {
+            selectedMarker = marker13;
+            newCenter = marker13.getLatLng();
+            newZoom = 19; // Définissez le niveau de zoom souhaité pour le marqueur 3
+        } else if (selection === 'marker14') {
+            selectedMarker = marker14;
+            newCenter = marker14.getLatLng();
+            newZoom = 19; // Définissez le niveau de zoom souhaité pour le marqueur 3
+        } else if (selection === 'marker15') {
+            selectedMarker = marker15;
+            newCenter = marker15.getLatLng();
+            newZoom = 19; // Définissez le niveau de zoom souhaité pour le marqueur 3
+        }  else {
+		
+            // Aucun marqueur sélectionné, réinitialiser la carte
+            newCenter = [42.2, 9.0];
+            newZoom = 9;
+        }
+
+        map.setView(newCenter, newZoom);
+
+        if (selectedMarker) {
+            // Ouvrir le popup du marqueur sélectionné
+            selectedMarker.openPopup();
+        }
+    }
+	
+	 function toggleMarkersVisibility() {
+        if (document.getElementById('toggleMarkersCheckbox').checked) {
+            map.addLayer(markers);
+        } else {
+            map.removeLayer(markers);
+        }
+    }
+	
+// Ajoutez un groupe de calques pour les marqueurs GR 20 - Traversée Nord/Sud
+var gr20Markers = L.layerGroup();
+
+// Logo GR 20 - Traversée Nord/Sud
+var gr20Icon1 = L.icon({
+  iconUrl: 'https://cdn.icon-icons.com/icons2/2248/PNG/512/alpha_d_circle_icon_135976.png',
+  iconSize: [32, 32],
+  iconAnchor: [16, 16]
+});
+
+// Marqueur avec le logo GR 20 - Traversée Nord/Sud
+var gr20Marker1 = L.marker([42.50634782076602, 8.855125327079403], { icon: gr20Icon1 });
+gr20Markers.addLayer(gr20Marker1);
+
+var gr20Icon2 = L.icon({
+  iconUrl: 'https://cdn-icons-png.flaticon.com/512/12/12580.png',
+  iconSize: [32, 32],
+  iconAnchor: [16, 16]
+});
+
+var gr20Marker2 = L.marker([41.755114616139004, 9.33167212303398], { icon: gr20Icon2 });
+gr20Markers.addLayer(gr20Marker2);
+
+// Ajoutez les marqueurs GR 20 à la carte, mais masquez-les par défaut
+map.addLayer(gr20Markers);
+gr20Markers.removeFrom(map);
+
+// Créez un bouton pour afficher ou désafficher les marqueurs GR 20 - Traversée Nord/Sud
+var toggleGr20Button = L.control({ position: 'topleft' });
+
+toggleGr20Button.onAdd = function (map) {
+  var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+
+  container.innerHTML = '<button onclick="toggleGr20Markers(\'nord_sud\')"> Afficher Marqueurs GR 20 - Traversée Nord/Sud </button>';
+
+  return container;
+};
+
+toggleGr20Button.addTo(map);
+
+// Ajoutez un groupe de calques pour les marqueurs GR 20 - Traversée Sud/Nord
+var gr20Markers1 = L.layerGroup();
+
+// Logo GR 20 - Traversée Sud/Nord
+var gr20Icon3 = L.icon({
+  iconUrl: 'https://cdn.icon-icons.com/icons2/2248/PNG/512/alpha_d_circle_icon_135976.png',
+  iconSize: [32, 32],
+  iconAnchor: [16, 16]
+});
+
+// Marqueur avec le logo GR 20 - Traversée Sud/Nord
+var gr20Marker3 = L.marker([41.755114616139004, 9.33167212303398], { icon: gr20Icon3 });
+gr20Markers1.addLayer(gr20Marker3);
+
+var gr20Icon4 = L.icon({
+  iconUrl: 'https://cdn-icons-png.flaticon.com/512/12/12580.png',
+  iconSize: [32, 32],
+  iconAnchor: [16, 16]
+});
+
+var gr20Marker4 = L.marker([42.50634782076602, 8.855125327079403], { icon: gr20Icon4 });
+gr20Markers1.addLayer(gr20Marker4);
+
+// Ajoutez les marqueurs GR 20 à la carte, mais masquez-les par défaut
+map.addLayer(gr20Markers1);
+gr20Markers1.removeFrom(map);
+
+// Créez un bouton pour afficher ou désafficher les marqueurs GR 20 - Traversée Sud/Nord
+var toggleGr20Button2 = L.control({ position: 'topleft' });
+
+toggleGr20Button2.onAdd = function (map) {
+  var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+
+  container.innerHTML = '<button onclick="toggleGr20Markers(\'sud_nord\')"> Afficher Marqueurs GR 20 - Traversée Sud/Nord </button>';
+
+  return container;
+};
+
+toggleGr20Button2.addTo(map);
+
+// Fonction pour afficher ou désafficher les marqueurs GR 20 en fonction de la traversée
+function toggleGr20Markers(traverseType) {
+  if (traverseType === 'nord_sud') {
+    if (map.hasLayer(gr20Markers)) {
+      map.removeLayer(gr20Markers);
+      document.querySelector('button').innerText = 'Afficher Marqueurs GR 20 - Traversée Nord/Sud';
+    } else {
+      map.addLayer(gr20Markers);
+      document.querySelector('button').innerText = 'Masquer Marqueurs GR 20 - Traversée Nord/Sud';
+    }
+  } else if (traverseType === 'sud_nord') {
+    if (map.hasLayer(gr20Markers1)) {
+      map.removeLayer(gr20Markers1);
+      document.querySelector('button').innerText = 'Afficher Marqueurs GR 20 - Traversée Sud/Nord';
+    } else {
+      map.addLayer(gr20Markers1);
+      document.querySelector('button').innerText = 'Masquer Marqueurs GR 20 - Traversée Sud/Nord';
+    }
+  }
+}
+	// Ajout de la couche WMS GeoServer à la carte
+    var url_PONTS = 'http://localhost:8080/geoserver/postgrsql/wms';
+    var PONTS = L.tileLayer.wms(url_PONTS, {
+        layers: 'PONTS',
+        format: 'image/png',
+        transparent: true,
+        attribution: "mylayer",
+        crs: L.CRS.EPSG2154,
+        opacity: 0.5,
+    });
+	
+	//COUCHES AVEC FILTRE
+	 
+	var url_BIVOUAC = 'http://localhost:8080/geoserver/postgrsql/wms';
+    var BIVOUACAll = L.tileLayer.wms(url_BIVOUAC, {
+            layers: 'BIVOUAC',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.7,
+        });
+		
+	var BIVOUACFiltered = L.tileLayer.wms(url_BIVOUAC, {
+            layers: 'BIVOUAC',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.7,
+        });
+	
+	// Initialiser la couche CORRIDOR avec un filtre vide
+   BIVOUACFiltered.setParams({ CQL_FILTER: 'name7=\'\'' });
+	
+	var url_SOMMETS = 'http://localhost:8080/geoserver/postgrsql/wms';
+    var SOMMETSAll = L.tileLayer.wms(url_SOMMETS, {
+            layers: 'SOMMETS',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.7,
+        });
+		
+	var SOMMETSFiltered = L.tileLayer.wms(url_SOMMETS, {
+            layers: 'SOMMETS',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.7,
+        });
+	
+	// Initialiser la couche CORRIDOR avec un filtre vide
+    SOMMETSFiltered.setParams({ CQL_FILTER: 'type=\'\'' });
+		
+	var url_POINTS_EAU = 'http://localhost:8080/geoserver/postgrsql/wms';
+    var POINTS_EAUAll = L.tileLayer.wms(url_POINTS_EAU, {
+            layers: 'cascade',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.7,
+        });
+		
+	var POINTS_EAUFiltered = L.tileLayer.wms(url_POINTS_EAU, {
+            layers: 'cascade',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.7,
+        });
+		
+	// Initialiser la couche CORRIDOR avec un filtre vide
+    POINTS_EAUFiltered.setParams({ CQL_FILTER: 'name=\'\'' });
+	
+	var url_POINTS_VUE = 'http://localhost:8080/geoserver/postgrsql/wms';
+    var POINTS_VUEAll = L.tileLayer.wms(url_POINTS_VUE, {
+            layers: 'POINT_VUE',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.7,
+        });
+		
+	var POINTS_VUEFiltered = L.tileLayer.wms(url_POINTS_VUE, {
+            layers: 'POINT_VUE',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.7,
+        });
+		
+	// Initialiser la couche CORRIDOR avec un filtre vide
+    POINTS_VUEFiltered.setParams({ CQL_FILTER: 'name6=\'\'' });
+	var url_POINTS_VUE = 'http://localhost:8080/geoserver/postgrsql/wms';
+    var POINTS_VUEAll = L.tileLayer.wms(url_POINTS_VUE, {
+            layers: 'POINT_VUE',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.7,
+        });
+		
+	var POINTS_VUEFiltered = L.tileLayer.wms(url_POINTS_VUE, {
+            layers: 'POINT_VUE',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.7,
+        });
+		
+	// Initialiser la couche CORRIDOR avec un filtre vide
+    POINTS_VUEFiltered.setParams({ CQL_FILTER: 'name6=\'\'' });
+	
+	
+	var url_BERGERIE = 'http://localhost:8080/geoserver/postgrsql/wms';
+    var BERGERIEAll = L.tileLayer.wms(url_BERGERIE, {
+            layers: 'Bergerie',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.7,
+        });
+		
+	var BERGERIEFiltered = L.tileLayer.wms(url_BERGERIE, {
+            layers: 'Bergerie',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.7,
+        });
+		
+	// Initialiser la couche CORRIDOR avec un filtre vide
+    BERGERIEFiltered.setParams({ CQL_FILTER: 'noms=\'\'' });
+	
+	var url_CHAPPELLE = 'http://localhost:8080/geoserver/postgrsql/wms';
+    var CHAPPELLEAll = L.tileLayer.wms(url_CHAPPELLE, {
+            layers: 'Edifices',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.7,
+        });
+		
+	var CHAPPELLEFiltered = L.tileLayer.wms(url_CHAPPELLE, {
+            layers: 'Edifices',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.7,
+        });
+		
+	// Initialiser la couche CORRIDOR avec un filtre vide
+    CHAPPELLEFiltered.setParams({ CQL_FILTER: 'name1=\'\'' });
+	
+	 // Ajout de la couche RESERVOIRFiltered à la carte au chargement
+	 map.addLayer(SOMMETSFiltered);
+	map.addLayer(CHAPPELLEFiltered);
+	map.addLayer(BERGERIEFiltered);
+	map.addLayer(BIVOUACFiltered);
+	map.addLayer(POINTS_EAUFiltered);
+	map.addLayer(POINTS_VUEFiltered);
+	
+	// Utilisez bringToFront() pour déplacer les couches vers l'avant
+	SOMMETSFiltered.bringToFront();
+	CHAPPELLEFiltered.bringToFront();
+	BERGERIEFiltered.bringToFront();
+	POINTS_EAUFiltered.bringToFront();
+	POINTS_VUEFiltered.bringToFront();
+	BIVOUACFiltered.bringToFront();
+	
+	var url_PARC = 'http://localhost:8080/geoserver/postgrsql/wms';
+    var PARC = L.tileLayer.wms(url_PARC, {
+            layers: 'parc_corse',
+            format: 'image/png',
+            transparent: true,
+            attribution: "mylayer",
+            crs: L.CRS.EPSG2154,
+            opacity: 0.25,
+            color: '31B54B',
+            borderColor: '31B54B'
+        }).addTo(map);
+		
+    // Ajout de la couche WMS GeoServer à la carte
+    var url_ETAPE = 'http://localhost:8080/geoserver/postgrsql/wms';
+    var ETAPE_GR20 = L.tileLayer.wms(url_ETAPE, {
+        layers: 'ETAPE_GR20',
+        format: 'image/png',
+        transparent: true,
+        attribution: "mylayer",
+        crs: L.CRS.EPSG2154,
+        opacity: 1,
+    }).addTo(map);
+	
+	function updateLayer(layerType) {
+        var selectedType = document.getElementById(layerType).value;
+        var layerFiltered, layerAll;
+
+        switch (layerType) {
+			case 'type':
+                layerFiltered = SOMMETSFiltered;
+                layerAll = SOMMETSAll;
+                break;
+            case 'name':
+                layerFiltered = POINTS_EAUFiltered;
+                layerAll = POINTS_EAUAll;
+                break;
+			case 'name6':
+                layerFiltered = POINTS_VUEFiltered;
+                layerAll = POINTS_VUEAll;
+                break;
+			case 'name7':
+                layerFiltered = BIVOUACFiltered;
+                layerAll = BIVOUACAll;
+                break;
+			case 'noms':
+                layerFiltered = BERGERIEFiltered;
+                layerAll = BERGERIEAll;
+                break
+			case 'name1':
+                layerFiltered = CHAPPELLEFiltered;
+                layerAll = CHAPPELLEAll;
+                break
+			
+            default:
+                return;
+        }
+	
+	if (selectedType === "none") {
+            // ne rien afficher
+            map.removeLayer(layerAll);
+            map.removeLayer(layerFiltered);
+        } else if (selectedType === "all") {
+            // afficher la couche sans aucun filtre
+            map.removeLayer(layerFiltered);
+            map.addLayer(layerAll);
+        } else {
+            // afficher la couche avec filtre
+            map.removeLayer(layerAll);
+            map.addLayer(layerFiltered);
+            layerFiltered.setParams({ CQL_FILTER: layerType + '=\'' + selectedType + '\'' });
+        }
+    }
+	
+function toggleLayerVisibility(layerName) {
+		var layer = window[layerName];
+
+		if (document.getElementById('ETAPE_GR20').checked) {
+			map.addLayer(ETAPE_GR20);
+		} else {
+			map.removeLayer(ETAPE_GR20);
+		}
+		
+		if (document.getElementById('PARC').checked) {
+			map.addLayer(PARC);
+		} else {
+			map.removeLayer(PARC);
+		}
+		if (document.getElementById('PONTS').checked) {
+			map.addLayer(PONTS);
+		} else {
+			map.removeLayer(PONTS);
+		}
+	}
+	
+	 L.control.scale().addTo(map);
+
+    // Groupe de marqueurs avec regroupement
+    //var markers = L.markerClusterGroup();
+
+    // Ajout des marqueurs au groupe
+//var marker1 = L.marker([42.462289752147214, 8.918035537693063]).bindPopup("<b>Monte Corona</b><br>Altitude: 2144 m<br>");
+//var marker2 = L.marker([42.426934918788255, 9.082156427362717]).bindPopup("<b>Aiguilles de Popolasca</b><br>Altitude: 1927 m<br>");
+//var marker3 = L.marker([42.404768635286466, 8.989772795043068]).bindPopup("<b>Capu Biancu</b><br>Altitude: 2562 m<br>");
+//var marker4 = L.marker([42.38124911384759, 8.945796787198844]).bindPopup("<b>Monte Cinto</b><br>Altitude: 2706m<br>");
+//var marker5 = L.marker([42.37806121538992, 8.937411799534575]).bindPopup("<b>Pointe des Éboulis</b><br>Altitude: 2587 m<br>");
+//var marker6 = L.marker([42.376531316785446, 8.908497882594787]).bindPopup("<b>Cascettoni</b><br>Altitude: 1906 m<br>");
+//var marker7 = L.marker([42.34268331125719, 8.86647334101398]).bindPopup("<b>Capu Tafunatu</b><br>Altitude: 2335 m<br>");
+//var marker8 = L.marker([42.212063408143464, 9.005717433792295]).bindPopup("<b>Punta Allé Porte</b><br>Altitude: 2313 m<br>");
+//var marker9 = L.marker([42.46266971063071, 8.918445959196575]).bindPopup("<b>Punta Licciola</b><br>Altitude: 2235 m<br>");
+//var marker10 = L.marker([42.21948407132503, 9.0588980475306]).bindPopup("<b>Monte Rotondo</b><br>Altitude: 2622 m<br>");
+//var marker11 = L.marker([42.14009486444094, 9.099746921702796]).bindPopup("<b>Monte d'Oro</b><br>Altitude: 2389 m<br>");
+//var marker12 = L.marker([42.09207034075559, 9.134429928075415]).bindPopup("<b>Punta dell'Oriente</b><br>Altitude: 2111 m<br>");
+//var marker13 = L.marker([42.06232263743414, 9.13520066155036]).bindPopup("<b>Monte Corona</b><br>Altitude: 2144 m<br>");
+//var marker14 = L.marker([42.46266971063071, 8.918445959196575]).bindPopup("<b>Monte Renoso</b><br>Altitude: 2352 m<br>");
+//var marker15 = L.marker([42.05259440227992, 9.111307923827]).bindPopup("<b>Punta alla Vetta</b><br>Altitude: 2255 m<br>");
+//var marker16 = L.marker([41.855875706062896, 9.227378329812073]).bindPopup("<b>Punta Di Tintennaja</b><br>Altitude: 1992 m<br>");
+//var marker17 = L.marker([41.99654357784021, 9.217170646658527]).bindPopup("<b>Punta della Cappella</b><br>Altitude: 2041 m<br>");
+//var marker18 = L.marker([41.8529833050582, 9.212097163024666]).bindPopup("<b>la Punta Scarachiana</b><br>Altitude: 2126 m<br>");
+//var marker19 = L.marker([41.84948263196854, 9.207498585731965]).bindPopup("<b>le Monte Incudine</b><br>Altitude: 2136 m<br>");
+//var marker20 = L.marker([42.03763810201276, 9.125367603824056]).bindPopup("<b>Punta Scaldasole</b><br>Altitude: 2100 m<br>");
+//var marker21 = L.marker([42.090569112542696, 9.13448714993672]).bindPopup("<b>Punta dell'Oriente</b><br>Altitude: 2111 m<br>");
+//var marker22 = L.marker([42.041689058494875, 9.104111926612436]).bindPopup("<b>Monte Niello</b><br>Altitude: 2157 m<br>");
+//var marker23 = L.marker([42.052035509387956, 9.11234191085118]).bindPopup("<b>Punta alla Vetta</b><br>Altitude: 2255 m<br>");
+//var marker24 = L.marker([42.04877563108026, 9.142192474368112]).bindPopup("<b>Monte Torto</b><br>Altitude: 1308 m<br>");
+//var marker25 = L.marker([42.06006246084741, 9.133780588201711]).bindPopup("<b>Monte Renoso</b><br>Altitude: 2352 m<br>");
+//var marker26 = L.marker([42.23808284745479, 8.939519547219943]).bindPopup("<b>Cimatella</b><br>Altitude: 2100 m<br>");
+//var marker27 = L.marker([42.13551620345134, 9.071301149018051]).bindPopup("<b>Pointe Migliarello</b><br>Altitude: 1163 m<br>");
+//var marker28 = L.marker([42.209268207964335, 9.00623091269547]).bindPopup("<b>Punta Allé Porte</b><br>Altitude: 2313 m<br>");
+//var marker29 = L.marker([42.264987194923265, 8.97044059061768]).bindPopup("<b>Punta Artica</b><br>Altitude: 2327 m<br>");
+//var marker30 = L.marker([42.2090348116877, 9.038110622036289]).bindPopup("<b>Bocca Muzzella</b><br>Altitude: 2206 m<br>");
+//var marker31 = L.marker([42.230870639126664, 9.119824267758629]).bindPopup("<b>Monte Cardo</b><br>Altitude: 2453 m<br>");
+//var marker32 = L.marker([42.21041710947858, 9.046606590285652]).bindPopup("<b>A Maniccia</b><br>Altitude: 2496 m<br>");
+//var marker33 = L.marker([42.21714337588393, 9.053511944839725]).bindPopup("<b>Punta Mufrena</b><br>Altitude: 2560 m<br>");
+//var marker34 = L.marker([42.393276576820604, 8.978464946910782]).bindPopup("<b>Capu à U Verdatu</b><br>Altitude: 2583 m<br>");
+//var marker35 = L.marker([42.375418363161494, 8.914198930851423]).bindPopup("<b>Punta Minuta</b><br>Altitude: 2556 m<br>");
+//var marker36 = L.marker([42.36915875923025, 8.929692253541438]).bindPopup("<b>le Capu Falu </b><br>Altitude: 2000 m<br>");
+//var marker37 = L.marker([42.34345474268512, 8.878479930474239]).bindPopup("<b>Paglia Orba</b><br>Altitude: 2525 m<br>");
+//var marker38 = L.marker([42.37398073964392, 8.923834592217982]).bindPopup("<b>Capu Larghia</b><br>Altitude: 2503 m<br>");
+//var marker39 = L.marker([42.466507633304985, 8.987948731936354]).bindPopup("<b>Monte Padro</b><br>Altitude: 2389 m<br>");
+//var marker40 = L.marker([42.42116882601727, 9.080198270017751]).bindPopup("<b>Cima à I Mori</b><br>Altitude: 2180 m<br>");
+//var marker41 = L.marker([42.410386004653134, 8.911515592652567]).bindPopup("<b>A Muvrella</b><br>Altitude: 2148 m<br>");
+//var marker42 = L.marker([42.47330771939438, 8.916179932017092]).bindPopup("<b>Capu a u Dente</b><br>Altitude: 2029 m<br>");
+
+
+
+//markers.addLayer(marker1);
+//markers.addLayer(marker2);
+//markers.addLayer(marker3);
+//markers.addLayer(marker4);
+//markers.addLayer(marker5);
+//markers.addLayer(marker6);
+//markers.addLayer(marker7);
+//markers.addLayer(marker8);
+//markers.addLayer(marker9);
+//markers.addLayer(marker10);
+//markers.addLayer(marker11);
+//markers.addLayer(marker12);
+//markers.addLayer(marker13);
+//markers.addLayer(marker14);
+//markers.addLayer(marker15);
+//markers.addLayer(marker16);
+//markers.addLayer(marker17);
+//markers.addLayer(marker18);
+//markers.addLayer(marker19);
+//markers.addLayer(marker20);
+//markers.addLayer(marker21);
+//markers.addLayer(marker22);
+//markers.addLayer(marker23);
+//markers.addLayer(marker24);
+//markers.addLayer(marker25);
+//markers.addLayer(marker26);
+//markers.addLayer(marker27);
+//markers.addLayer(marker28);
+//markers.addLayer(marker29);
+//markers.addLayer(marker30);
+//markers.addLayer(marker31);
+//markers.addLayer(marker32);
+//markers.addLayer(marker33);
+//markers.addLayer(marker34);
+//markers.addLayer(marker35);
+//markers.addLayer(marker36);
+//markers.addLayer(marker37);
+//markers.addLayer(marker38);
+//markers.addLayer(marker39);
+//markers.addLayer(marker40);
+//markers.addLayer(marker41);
+//markers.addLayer(marker42);
+
+
+    // Ajout du groupe de marqueurs à la carte
+    //map.addLayer(markers);
+
+  // Ajout du suivi de la souris
+   
+    var coordinates = document.getElementById('coordinates');
+    map.on('mousemove', function (e) {
+        coordinates.innerHTML = 'Latitude: ' + e.latlng.lat.toFixed(6) + ' | Longitude: ' + e.latlng.lng.toFixed(6);
+    });
+	
+</script>
+
+</body>
+</html>
